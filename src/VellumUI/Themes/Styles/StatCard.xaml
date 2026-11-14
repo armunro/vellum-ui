@@ -1,0 +1,177 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:VellumUI.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Dimensions.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Typography.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Icons.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- ZenStatCard Style -->
+    <Style x:Key="Zen.Style.StatCard" TargetType="{x:Type controls:ZenStatCard}">
+        <Setter Property="Background" Value="{StaticResource Zen.Brush.Background.Surface}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Subtle}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+        <Setter Property="FontFamily" Value="{StaticResource Zen.Font.Family}" />
+        <Setter Property="AccentBrush" Value="{StaticResource Zen.Brush.Primary}" />
+        <Setter Property="CornerRadius" Value="{StaticResource Zen.CornerRadius.Default}" />
+        <Setter Property="Padding" Value="14,12,14,12" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenStatCard}">
+                    <Border x:Name="cardBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Top Accent Line -->
+                            <Border x:Name="topAccent"
+                                    Height="2"
+                                    Background="{TemplateBinding AccentBrush}"
+                                    CornerRadius="2,2,0,0"
+                                    VerticalAlignment="Top"
+                                    Margin="-14,-12,-14,8"
+                                    Visibility="Collapsed" />
+
+                            <!-- Header: Title + Icon -->
+                            <Grid Grid.Row="0" Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           FontFamily="{StaticResource Zen.Font.Family}"
+                                           FontSize="{StaticResource Zen.Font.Size.Caption}"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource Zen.Brush.Foreground.Muted}"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
+
+                                <Border x:Name="iconContainer"
+                                        Grid.Column="1"
+                                        Width="24"
+                                        Height="24"
+                                        CornerRadius="{StaticResource Zen.CornerRadius.Default}"
+                                        Background="{StaticResource Zen.Brush.Background.SurfaceAlt}"
+                                        VerticalAlignment="Center">
+                                    <Path x:Name="iconPath"
+                                          Data="{TemplateBinding Icon}"
+                                          Fill="{TemplateBinding AccentBrush}"
+                                          Stretch="Uniform"
+                                          Width="12"
+                                          Height="12"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+
+                            <!-- Metric Value & Unit -->
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,6">
+                                <TextBlock Text="{TemplateBinding Value}"
+                                           FontFamily="{StaticResource Zen.Font.Family.Mono}"
+                                           FontSize="{StaticResource Zen.Font.Size.Title}"
+                                           FontWeight="Bold"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           VerticalAlignment="Bottom" />
+
+                                <TextBlock Text="{TemplateBinding Unit}"
+                                           FontFamily="{StaticResource Zen.Font.Family}"
+                                           FontSize="{StaticResource Zen.Font.Size.Body}"
+                                           FontWeight="Medium"
+                                           Foreground="{StaticResource Zen.Brush.Foreground.Secondary}"
+                                           Margin="4,0,0,3"
+                                           VerticalAlignment="Bottom" />
+                            </StackPanel>
+
+                            <!-- Trend Indicator & Description -->
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border x:Name="trendBadge"
+                                        CornerRadius="2"
+                                        Padding="4,1,4,1"
+                                        Margin="0,0,6,0"
+                                        VerticalAlignment="Center"
+                                        Visibility="Collapsed">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Path x:Name="trendArrow"
+                                              Stretch="Uniform"
+                                              Width="8"
+                                              Height="8"
+                                              Margin="0,0,3,0"
+                                              VerticalAlignment="Center" />
+                                        <TextBlock x:Name="trendText"
+                                                   Text="{TemplateBinding TrendText}"
+                                                   FontFamily="{StaticResource Zen.Font.Family.Mono}"
+                                                   FontSize="10"
+                                                   FontWeight="Bold"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Border>
+
+                                <TextBlock Text="{TemplateBinding Description}"
+                                           FontSize="{StaticResource Zen.Font.Size.Caption}"
+                                           Foreground="{StaticResource Zen.Brush.Foreground.Muted}"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+
+                            <!-- Optional Custom Body Content -->
+                            <ContentPresenter Grid.Row="3"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              Margin="0,8,0,0" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Top Accent Visibility -->
+                        <Trigger Property="ShowTopAccent" Value="True">
+                            <Setter TargetName="topAccent" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <!-- Hide icon container if no icon -->
+                        <Trigger Property="Icon" Value="{x:Null}">
+                            <Setter TargetName="iconContainer" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <!-- Trend Directions -->
+                        <Trigger Property="TrendDirection" Value="Up">
+                            <Setter TargetName="trendBadge" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="trendBadge" Property="Background" Value="{StaticResource Zen.Brush.Success.Muted}" />
+                            <Setter TargetName="trendArrow" Property="Data" Value="{StaticResource Zen.Icon.Geometry.ChevronUp}" />
+                            <Setter TargetName="trendArrow" Property="Fill" Value="{StaticResource Zen.Brush.Foreground.VibrantGreen}" />
+                            <Setter TargetName="trendText" Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantGreen}" />
+                        </Trigger>
+                        <Trigger Property="TrendDirection" Value="Down">
+                            <Setter TargetName="trendBadge" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="trendBadge" Property="Background" Value="{StaticResource Zen.Brush.Danger.Muted}" />
+                            <Setter TargetName="trendArrow" Property="Data" Value="{StaticResource Zen.Icon.Geometry.ChevronDown}" />
+                            <Setter TargetName="trendArrow" Property="Fill" Value="{StaticResource Zen.Brush.Foreground.VibrantRose}" />
+                            <Setter TargetName="trendText" Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantRose}" />
+                        </Trigger>
+                        <Trigger Property="TrendDirection" Value="Neutral">
+                            <Setter TargetName="trendBadge" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="trendBadge" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceAlt}" />
+                            <Setter TargetName="trendArrow" Property="Data" Value="{StaticResource Zen.Icon.Geometry.Minus}" />
+                            <Setter TargetName="trendArrow" Property="Fill" Value="{StaticResource Zen.Brush.Foreground.Secondary}" />
+                            <Setter TargetName="trendText" Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Secondary}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ZenStatCard}" BasedOn="{StaticResource Zen.Style.StatCard}" />
+
+</ResourceDictionary>

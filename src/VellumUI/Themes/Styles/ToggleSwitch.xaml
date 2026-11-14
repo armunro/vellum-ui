@@ -1,0 +1,105 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:VellumUI.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Dimensions.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Typography.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Icons.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- ================================================================= -->
+    <!-- ZEN UI TOGGLESWITCH STYLE                                         -->
+    <!-- ================================================================= -->
+
+    <Style x:Key="Zen.Style.ToggleSwitch" TargetType="{x:Type controls:ZenToggleSwitch}">
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+        <Setter Property="Background" Value="{StaticResource Zen.Brush.Background.Input}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Default}" />
+        <Setter Property="BorderThickness" Value="{StaticResource Zen.Thickness.Border}" />
+        <Setter Property="Padding" Value="6,0,0,0" />
+        <Setter Property="FontFamily" Value="{StaticResource Zen.Font.Family}" />
+        <Setter Property="FontSize" Value="{StaticResource Zen.Font.Size.Body}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenToggleSwitch}">
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Switch Track -->
+                        <Border x:Name="track"
+                                Grid.Column="0"
+                                Width="34"
+                                Height="18"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="9">
+                            <Canvas Width="34" Height="18" ClipToBounds="True">
+                                <Ellipse x:Name="thumb"
+                                         Width="12"
+                                         Height="12"
+                                         Canvas.Left="2"
+                                         Canvas.Top="2"
+                                         Fill="{StaticResource Zen.Brush.Foreground.Secondary}" />
+                            </Canvas>
+                        </Border>
+
+                        <!-- Label / Content -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="{TemplateBinding Padding}" VerticalAlignment="Center">
+                            <ContentPresenter x:Name="contentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              RecognizesAccessKey="True" />
+                            <TextBlock x:Name="stateText"
+                                       Text="{TemplateBinding OffContent}"
+                                       Foreground="{StaticResource Zen.Brush.Foreground.Muted}"
+                                       FontSize="{StaticResource Zen.Font.Size.Caption}"
+                                       Margin="4,0,0,0"
+                                       VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="track" Property="Background" Value="{StaticResource Zen.Brush.Primary}" />
+                            <Setter TargetName="track" Property="BorderBrush" Value="{StaticResource Zen.Brush.Primary.Hover}" />
+                            <Setter TargetName="thumb" Property="Canvas.Left" Value="18" />
+                            <Setter TargetName="thumb" Property="Fill" Value="{StaticResource Zen.Brush.Primary.Foreground}" />
+                            <Setter TargetName="stateText" Property="Text" Value="{Binding OnContent, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <Setter TargetName="stateText" Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="track" Property="BorderBrush" Value="{StaticResource Zen.Brush.Primary.Hover}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="track" Property="Background" Value="{StaticResource Zen.Brush.Background.Canvas}" />
+                            <Setter TargetName="track" Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Subtle}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+                            <Setter TargetName="thumb" Property="Fill" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ZenToggleSwitch}" BasedOn="{StaticResource Zen.Style.ToggleSwitch}" />
+
+</ResourceDictionary>

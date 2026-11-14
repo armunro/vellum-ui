@@ -1,0 +1,181 @@
+﻿<UserControl x:Class="VellumUI.Demo.Views.CardsContainersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:VellumUI.Controls;assembly=VellumUI">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="8,4">
+        <StackPanel>
+            <TextBlock Text="Containers, Cards &amp; Indicators" Style="{StaticResource Zen.Style.TextBlock.Heading}" />
+            <TextBlock Text="High density card structures, collapsible expanders, status badges and indicators"
+                       Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,2,0,8" />
+
+            <!-- Row 1: Cards with Accent Highlights -->
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Card 1: Primary Accent -->
+                <controls:ZenCard Grid.Column="0" Header="PRIMARY CONTAINER" Subtitle="Cyan Highlight Header" ShowTopAccent="True" HighlightBrush="{StaticResource Zen.Brush.Primary}" Margin="0,0,4,0">
+                    <controls:ZenCard.HeaderAction>
+                        <controls:ZenBadge Content="ACTIVE" Variant="Primary" />
+                    </controls:ZenCard.HeaderAction>
+                    <StackPanel>
+                        <TextBlock Text="ZenCards feature minimal 8px padding and sharp 1px borders to maximize usable data density."
+                                   Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,0,0,6" />
+                        <Button Content="Primary Action" Style="{StaticResource Zen.Style.Button.Primary}" HorizontalAlignment="Left" />
+                    </StackPanel>
+                </controls:ZenCard>
+
+                <!-- Card 2: Secondary Accent -->
+                <controls:ZenCard Grid.Column="1" Header="SECONDARY CONTAINER" Subtitle="Violet Highlight Header" ShowTopAccent="True" HighlightBrush="{StaticResource Zen.Brush.Secondary}" Margin="4,0,4,0">
+                    <controls:ZenCard.HeaderAction>
+                        <controls:ZenBadge Content="AI POWERED" Variant="Secondary" />
+                    </controls:ZenCard.HeaderAction>
+                    <StackPanel>
+                        <TextBlock Text="Secondary accents give visual hierarchy for specialized workflows and intelligence engines."
+                                   Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,0,0,6" />
+                        <Button Content="Secondary Action" Style="{StaticResource Zen.Style.Button.Secondary}" HorizontalAlignment="Left" />
+                    </StackPanel>
+                </controls:ZenCard>
+
+                <!-- Card 3: Danger / Critical -->
+                <controls:ZenCard Grid.Column="2" Header="CRITICAL SYSTEM" Subtitle="Rose Highlight Header" ShowTopAccent="True" HighlightBrush="{StaticResource Zen.Brush.Danger}" Margin="4,0,0,0">
+                    <controls:ZenCard.HeaderAction>
+                        <controls:ZenBadge Content="ALERT" Variant="Danger" />
+                    </controls:ZenCard.HeaderAction>
+                    <StackPanel>
+                        <TextBlock Text="Danger and warning cards immediately signal system states without intrusive popups."
+                                   Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,0,0,6" />
+                        <Button Content="Resolve Issue" Style="{StaticResource Zen.Style.Button.Danger}" HorizontalAlignment="Left" />
+                    </StackPanel>
+                </controls:ZenCard>
+            </Grid>
+
+            <!-- Row 2: Badges, Tags, Segmented Controls & Status Indicators -->
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Badges, Tags & Segmented Controls -->
+                <controls:ZenCard Grid.Column="0" Header="TAGS, SEGMENTS &amp; BADGES" Subtitle="Interactive pills &amp; toggle selectors" Margin="0,0,4,0">
+                    <StackPanel>
+                        <!-- Segmented Mode Switcher -->
+                        <TextBlock Text="ZenSegmentedControl (Mode Switcher):" Style="{StaticResource Zen.Style.TextBlock.Caption}" Margin="0,0,0,4" />
+                        <controls:ZenSegmentedControl SelectedIndex="0" Margin="0,0,0,8">
+                            <controls:ZenSegmentedItem Content="Overview" Icon="{StaticResource Zen.Icon.Geometry.Dashboard}" IsChecked="True" />
+                            <controls:ZenSegmentedItem Content="Analytics" Icon="{StaticResource Zen.Icon.Geometry.Controls}" BadgeText="12" />
+                            <controls:ZenSegmentedItem Content="Settings" Icon="{StaticResource Zen.Icon.Geometry.Settings}" />
+                        </controls:ZenSegmentedControl>
+
+                        <!-- Sleek Tags -->
+                        <TextBlock Text="ZenTag (Pill filter tags with remove &amp; selection):" Style="{StaticResource Zen.Style.TextBlock.Caption}" Margin="0,0,0,4" />
+                        <WrapPanel Margin="0,0,0,8">
+                            <controls:ZenTag Content="v2.4.0-stable" Icon="{StaticResource Zen.Icon.Geometry.Sparkles}" Margin="0,0,4,4" />
+                            <controls:ZenTag Content="Kubernetes" IsSelectable="True" IsSelected="True" Margin="0,0,4,4" />
+                            <controls:ZenTag Content="Docker" IsSelectable="True" Margin="0,0,4,4" />
+                            <controls:ZenTag Content="production" IsRemovable="True" Margin="0,0,4,4" />
+                            <controls:ZenTag Content="us-east-1" IsRemovable="True" Margin="0,0,4,4" />
+                        </WrapPanel>
+
+                        <!-- Badge Variants -->
+                        <TextBlock Text="ZenBadge Variants:" Style="{StaticResource Zen.Style.TextBlock.Caption}" Margin="0,0,0,4" />
+                        <WrapPanel Margin="0,0,0,8">
+                            <controls:ZenBadge Content="PRIMARY" Variant="Primary" Margin="0,0,4,4" />
+                            <controls:ZenBadge Content="SECONDARY" Variant="Secondary" Margin="0,0,4,4" />
+                            <controls:ZenBadge Content="SUCCESS" Variant="Success" Margin="0,0,4,4" />
+                            <controls:ZenBadge Content="WARNING" Variant="Warning" Margin="0,0,4,4" />
+                            <controls:ZenBadge Content="DANGER" Variant="Danger" Margin="0,0,4,4" />
+                            <controls:ZenBadge Content="INFO" Variant="Info" Margin="0,0,4,4" />
+                            <controls:ZenBadge Content="MUTED" Variant="Muted" Margin="0,0,4,4" />
+                            <controls:ZenBadge Content="OUTLINE" Variant="Outline" Margin="0,0,4,4" />
+                        </WrapPanel>
+
+                        <!-- Status Dots & Pulsing Glow -->
+                        <TextBlock Text="ZenStatusIndicator States:" Style="{StaticResource Zen.Style.TextBlock.Caption}" Margin="0,0,0,4" />
+                        <WrapPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,12,4">
+                                <controls:ZenStatusIndicator Status="Online" IsPulsing="True" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Online (Pulsing)" Style="{StaticResource Zen.Style.TextBlock.Caption}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,12,4">
+                                <controls:ZenStatusIndicator Status="Busy" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Busy" Style="{StaticResource Zen.Style.TextBlock.Caption}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,12,4">
+                                <controls:ZenStatusIndicator Status="Away" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Away" Style="{StaticResource Zen.Style.TextBlock.Caption}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,12,4">
+                                <controls:ZenStatusIndicator Status="Offline" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Offline" Style="{StaticResource Zen.Style.TextBlock.Caption}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </WrapPanel>
+                    </StackPanel>
+                </controls:ZenCard>
+
+                <!-- Callouts & Alerts -->
+                <controls:ZenCard Grid.Column="1" Header="CALLOUTS &amp; ALERTS" Subtitle="Dismissible status banners" Margin="4,0,0,0">
+                    <StackPanel>
+                        <controls:ZenCallout Title="System Update Complete"
+                                             Severity="Success"
+                                             IsDismissible="True"
+                                             Margin="0,0,0,6">
+                            <TextBlock Text="Cluster engine successfully updated to kernel v5.15." />
+                        </controls:ZenCallout>
+
+                        <controls:ZenCallout Title="High Memory Pressure"
+                                             Severity="Warning"
+                                             IsDismissible="True"
+                                             Margin="0,0,0,6">
+                            <TextBlock Text="Memory consumption exceeded 85% on node cluster-beta." />
+                        </controls:ZenCallout>
+
+                        <controls:ZenCallout Title="Authentication Failure"
+                                             Severity="Error"
+                                             IsDismissible="True">
+                            <TextBlock Text="Invalid API token presented from remote IP 192.168.1.45." />
+                        </controls:ZenCallout>
+                    </StackPanel>
+                </controls:ZenCard>
+            </Grid>
+
+            <!-- Row 3: Expanders & GroupBoxes -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Collapsible Expanders -->
+                <controls:ZenCard Grid.Column="0" Header="COLLAPSIBLE EXPANDERS" Subtitle="Nested details disclosure" Margin="0,0,4,0">
+                    <StackPanel>
+                        <Expander Header="Network Configuration Details" IsExpanded="True" Margin="0,0,0,4">
+                            <StackPanel>
+                                <TextBlock Text="IP Address: 192.168.1.100 (Static)" Style="{StaticResource Zen.Style.TextBlock.Code}" />
+                                <TextBlock Text="Gateway: 192.168.1.1 | Subnet: 255.255.255.0" Style="{StaticResource Zen.Style.TextBlock.Caption}" Margin="0,2,0,0" />
+                            </StackPanel>
+                        </Expander>
+                        <Expander Header="Hardware Diagnostics" IsExpanded="False">
+                            <TextBlock Text="All 16 CPU cores operating within nominal thermal envelopes (42°C)." Style="{StaticResource Zen.Style.TextBlock.Secondary}" />
+                        </Expander>
+                    </StackPanel>
+                </controls:ZenCard>
+
+                <!-- GroupBox Style -->
+                <controls:ZenCard Grid.Column="1" Header="GROUPBOX CONTAINERS" Subtitle="Classic boundary grouping" Margin="4,0,0,0">
+                    <GroupBox Header="SECURITY POLICY ENGINE">
+                        <StackPanel>
+                            <CheckBox Content="Enforce TLS 1.3 Strict Mode" IsChecked="True" Margin="0,0,0,4" />
+                            <CheckBox Content="Require MFA for administrative logins" IsChecked="True" Margin="0,0,0,4" />
+                            <CheckBox Content="Rotate cryptographic keys weekly" IsChecked="False" />
+                        </StackPanel>
+                    </GroupBox>
+                </controls:ZenCard>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

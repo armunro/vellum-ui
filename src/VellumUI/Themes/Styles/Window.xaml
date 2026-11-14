@@ -1,0 +1,197 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:VellumUI.Controls"
+                    xmlns:converters="clr-namespace:VellumUI.Converters">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Dimensions.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Typography.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Icons.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisConverter" />
+    <converters:NullToVisibilityConverter x:Key="NullToVisConverter" />
+
+    <!-- ================================================================= -->
+    <!-- ZEN UI WINDOW STYLE                                               -->
+    <!-- ================================================================= -->
+
+    <!-- Window System Button (Close/Min/Max) -->
+    <Style x:Key="Zen.Style.WindowSystemButton" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Secondary}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfacePressed}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Zen.Style.WindowCloseButton" TargetType="{x:Type Button}" BasedOn="{StaticResource Zen.Style.WindowSystemButton}">
+        <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource Zen.Brush.Danger}" />
+                <Setter Property="Foreground" Value="#FFFFFF" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource Zen.Brush.Danger.Hover}" />
+                <Setter Property="Foreground" Value="#FFFFFF" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ZenWindow Style -->
+    <Style x:Key="Zen.Style.ZenWindow" TargetType="{x:Type controls:ZenWindow}">
+        <Setter Property="Background" Value="{StaticResource Zen.Brush.Background.App}" />
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Default}" />
+        <Setter Property="BorderThickness" Value="{StaticResource Zen.Thickness.Border}" />
+        <Setter Property="FontFamily" Value="{StaticResource Zen.Font.Family}" />
+        <Setter Property="FontSize" Value="{StaticResource Zen.Font.Size.Body}" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome CaptionHeight="0"
+                              CornerRadius="0"
+                              GlassFrameThickness="0"
+                              ResizeBorderThickness="6"
+                              UseAeroCaptionButtons="False" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenWindow}">
+                    <Border x:Name="PART_WindowRoot"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Custom TitleBar -->
+                            <Border Grid.Row="0"
+                                    x:Name="PART_TitleBar"
+                                    Background="{StaticResource Zen.Brush.Background.Header}"
+                                    BorderBrush="{StaticResource Zen.Brush.Border.Subtle}"
+                                    BorderThickness="0,0,0,1"
+                                    Height="{TemplateBinding TitleBarHeight}"
+                                    Visibility="{TemplateBinding ShowTitleBar, Converter={StaticResource BoolToVisConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Window Icon & Title -->
+                                    <StackPanel Grid.Column="0"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Margin="8,0,12,0"
+                                                Background="Transparent">
+                                        <Path Data="{TemplateBinding WindowIcon}"
+                                              Width="16"
+                                              Height="16"
+                                              Fill="{StaticResource Zen.Brush.Foreground.VibrantCyan}"
+                                              Stretch="Uniform"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,8,0"
+                                              Visibility="{Binding WindowIcon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource NullToVisConverter}}" />
+                                        <TextBlock Text="{TemplateBinding Title}"
+                                                   FontWeight="{StaticResource Zen.Font.Weight.Medium}"
+                                                   FontSize="{StaticResource Zen.Font.Size.Body}"
+                                                   Foreground="{StaticResource Zen.Brush.Foreground.Primary}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+
+                                    <!-- Custom TitleBar Content (e.g. TopMenu / Search) -->
+                                    <ContentPresenter Grid.Column="1"
+                                                      Content="{TemplateBinding TitleBarContent}"
+                                                      VerticalAlignment="Center" />
+
+                                    <!-- System Buttons (Minimize, Maximize/Restore, Close) -->
+                                    <StackPanel Grid.Column="2"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Top">
+                                        <Button Command="{x:Static SystemCommands.MinimizeWindowCommand}"
+                                                Style="{StaticResource Zen.Style.WindowSystemButton}"
+                                                ToolTip="Minimize">
+                                            <Path Data="{StaticResource Zen.Icon.Geometry.WindowMinimize}"
+                                                  Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                  Width="10"
+                                                  Height="2"
+                                                  Stretch="Fill" />
+                                        </Button>
+                                        <Button x:Name="PART_MaximizeRestoreButton"
+                                                Command="{x:Static SystemCommands.MaximizeWindowCommand}"
+                                                Style="{StaticResource Zen.Style.WindowSystemButton}"
+                                                ToolTip="Maximize">
+                                            <Path x:Name="PART_MaximizeIcon"
+                                                  Data="{StaticResource Zen.Icon.Geometry.WindowMaximize}"
+                                                  Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                  Width="10"
+                                                  Height="10"
+                                                  Stretch="Uniform" />
+                                        </Button>
+                                        <Button Command="{x:Static SystemCommands.CloseWindowCommand}"
+                                                Style="{StaticResource Zen.Style.WindowCloseButton}"
+                                                ToolTip="Close">
+                                            <Path Data="{StaticResource Zen.Icon.Geometry.Close}"
+                                                  Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                  Width="10"
+                                                  Height="10"
+                                                  Stretch="Uniform" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Window Main Content -->
+                            <AdornerDecorator Grid.Row="1">
+                                <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </AdornerDecorator>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="WindowState" Value="Maximized">
+                            <Setter TargetName="PART_MaximizeRestoreButton" Property="Command" Value="{x:Static SystemCommands.RestoreWindowCommand}" />
+                            <Setter TargetName="PART_MaximizeRestoreButton" Property="ToolTip" Value="Restore Down" />
+                            <Setter TargetName="PART_MaximizeIcon" Property="Data" Value="{StaticResource Zen.Icon.Geometry.WindowRestore}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ZenWindow}" BasedOn="{StaticResource Zen.Style.ZenWindow}" />
+
+</ResourceDictionary>

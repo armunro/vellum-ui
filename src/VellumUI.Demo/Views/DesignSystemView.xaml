@@ -1,0 +1,148 @@
+﻿<UserControl x:Class="VellumUI.Demo.Views.DesignSystemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:VellumUI.Controls;assembly=VellumUI">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="8,4">
+        <StackPanel>
+            <TextBlock Text="Design System, Colors &amp; Density" Style="{StaticResource Zen.Style.TextBlock.Heading}" />
+            <TextBlock Text="Specifications: Dark Gray / Neutral base, vibrant accents, minimal margins/padding, subtle 2px border radius"
+                       Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,2,0,8" />
+
+            <!-- Row 1: Dark Gray Backgrounds & Primary/Secondary Accents -->
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Dark Gray Background Architecture -->
+                <controls:ZenCard Grid.Column="0" Header="DARK GRAY BACKGROUNDS" Subtitle="High-contrast layered surfaces" ShowTopAccent="True" HighlightBrush="{StaticResource Zen.Brush.Primary}" Margin="0,0,4,0">
+                    <StackPanel>
+                        <!-- Swatch 1: Canvas -->
+                        <Border Background="{StaticResource Zen.Brush.Background.Canvas}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1" Padding="8,6" Margin="0,0,0,4">
+                            <Grid>
+                                <TextBlock Text="Canvas / Window Root" FontWeight="Bold" Foreground="#FFFFFF" />
+                                <TextBlock Text="#0E0E10" Style="{StaticResource Zen.Style.TextBlock.Code}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Swatch 2: App Base -->
+                        <Border Background="{StaticResource Zen.Brush.Background.App}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1" Padding="8,6" Margin="0,0,0,4">
+                            <Grid>
+                                <TextBlock Text="App Base Background (Zinc-900)" FontWeight="Bold" Foreground="#FFFFFF" />
+                                <TextBlock Text="#18181B" Style="{StaticResource Zen.Style.TextBlock.Code}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Swatch 3: Header / Sidebar -->
+                        <Border Background="{StaticResource Zen.Brush.Background.Header}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1" Padding="8,6" Margin="0,0,0,4">
+                            <Grid>
+                                <TextBlock Text="Top Header / Sidebar" FontWeight="Bold" Foreground="#FFFFFF" />
+                                <TextBlock Text="#1C1C1F / #131315" Style="{StaticResource Zen.Style.TextBlock.Code}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Swatch 4: Card Surface -->
+                        <Border Background="{StaticResource Zen.Brush.Background.Surface}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1" Padding="8,6" Margin="0,0,0,4">
+                            <Grid>
+                                <TextBlock Text="Card &amp; Panel Surface (Zinc-800)" FontWeight="Bold" Foreground="#FFFFFF" />
+                                <TextBlock Text="#27272A" Style="{StaticResource Zen.Style.TextBlock.Code}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Swatch 5: Inset Input -->
+                        <Border Background="{StaticResource Zen.Brush.Background.Input}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1" Padding="8,6">
+                            <Grid>
+                                <TextBlock Text="Inset Field &amp; Input Background" FontWeight="Bold" Foreground="#FFFFFF" />
+                                <TextBlock Text="#121214" Style="{StaticResource Zen.Style.TextBlock.Code}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </controls:ZenCard>
+
+                <!-- Primary & Secondary Accents -->
+                <controls:ZenCard Grid.Column="1" Header="PRIMARY &amp; SECONDARY ACCENTS" Subtitle="High-energy vibrant focus colors" ShowTopAccent="True" HighlightBrush="{StaticResource Zen.Brush.Secondary}" Margin="4,0,0,0">
+                    <StackPanel>
+                        <!-- Primary Swatch -->
+                        <Border Background="{StaticResource Zen.Brush.Primary}" Padding="8,8" Margin="0,0,0,4">
+                            <Grid>
+                                <TextBlock Text="PRIMARY ACCENT (Electric Cyan / Sky)" FontWeight="Bold" Foreground="#FFFFFF" />
+                                <TextBlock Text="#0EA5E9 / #38BDF8" FontWeight="Bold" Foreground="#FFFFFF" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Secondary Swatch -->
+                        <Border Background="{StaticResource Zen.Brush.Secondary}" Padding="8,8" Margin="0,0,0,4">
+                            <Grid>
+                                <TextBlock Text="SECONDARY ACCENT (Electric Violet)" FontWeight="Bold" Foreground="#FFFFFF" />
+                                <TextBlock Text="#8B5CF6 / #A78BFA" FontWeight="Bold" Foreground="#FFFFFF" HorizontalAlignment="Right" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Status Accents Grid -->
+                        <Grid Margin="0,4,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" Grid.Column="0" Background="{StaticResource Zen.Brush.Success}" Padding="6,4" Margin="0,0,2,2">
+                                <TextBlock Text="SUCCESS (#10B981)" Foreground="#FFFFFF" FontSize="{StaticResource Zen.Font.Size.Caption}" FontWeight="Bold" />
+                            </Border>
+
+                            <Border Grid.Row="0" Grid.Column="1" Background="{StaticResource Zen.Brush.Warning}" Padding="6,4" Margin="2,0,0,2">
+                                <TextBlock Text="WARNING (#F59E0B)" Foreground="#FFFFFF" FontSize="{StaticResource Zen.Font.Size.Caption}" FontWeight="Bold" />
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="0" Background="{StaticResource Zen.Brush.Danger}" Padding="6,4" Margin="0,2,2,0">
+                                <TextBlock Text="DANGER (#F43F5E)" Foreground="#FFFFFF" FontSize="{StaticResource Zen.Font.Size.Caption}" FontWeight="Bold" />
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="1" Background="{StaticResource Zen.Brush.Info}" Padding="6,4" Margin="2,2,0,0">
+                                <TextBlock Text="INFO (#06B6D4)" Foreground="#FFFFFF" FontSize="{StaticResource Zen.Font.Size.Caption}" FontWeight="Bold" />
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </controls:ZenCard>
+            </Grid>
+
+            <!-- Row 2: Vibrant Foregrounds & Usable Space / Density Specs -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Foregrounds & Typography -->
+                <controls:ZenCard Grid.Column="0" Header="READABLE FOREGROUNDS" Subtitle="Comfortable high-legibility typography" Margin="0,0,4,0">
+                    <StackPanel>
+                        <TextBlock Text="Primary Readable Text: #E4E4E7" Foreground="{StaticResource Zen.Brush.Foreground.Primary}" FontWeight="Bold" Margin="0,0,0,3" />
+                        <TextBlock Text="Secondary Neutral Slate: #A1A1AA" Foreground="{StaticResource Zen.Brush.Foreground.Secondary}" Margin="0,0,0,3" />
+                        <TextBlock Text="Vibrant Cyan Text: #38BDF8" Foreground="{StaticResource Zen.Brush.Foreground.VibrantCyan}" FontWeight="Medium" Margin="0,0,0,3" />
+                        <TextBlock Text="Vibrant Emerald Text: #4ADE80" Foreground="{StaticResource Zen.Brush.Foreground.VibrantGreen}" FontWeight="Medium" Margin="0,0,0,3" />
+                        <TextBlock Text="Vibrant Purple Text: #C084FC" Foreground="{StaticResource Zen.Brush.Foreground.VibrantPurple}" FontWeight="Medium" Margin="0,0,0,3" />
+                        <TextBlock Text="Vibrant Yellow Text: #FDE047" Foreground="{StaticResource Zen.Brush.Foreground.VibrantYellow}" FontWeight="Medium" Margin="0,0,0,3" />
+                        <TextBlock Text="Vibrant Rose Text: #FB7185" Foreground="{StaticResource Zen.Brush.Foreground.VibrantRose}" FontWeight="Medium" Margin="0,0,0,3" />
+                        <TextBlock Text="Vibrant Orange Text: #FB923C" Foreground="{StaticResource Zen.Brush.Foreground.VibrantOrange}" FontWeight="Medium" />
+                    </StackPanel>
+                </controls:ZenCard>
+
+                <!-- Usable Space Density Metrics -->
+                <controls:ZenCard Grid.Column="1" Header="DENSITY &amp; MINIMAL BORDERS" Subtitle="Maximizing screen real estate" Margin="4,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="• Border Radius: 2px (Minimal, softened precision)" Style="{StaticResource Zen.Style.TextBlock.Body}" Margin="0,0,0,4" />
+                        <TextBlock Text="• Default Control Height: 28px (Compact 24px, Standard 28px)" Style="{StaticResource Zen.Style.TextBlock.Body}" Margin="0,0,0,4" />
+                        <TextBlock Text="• Button Padding: 8px, 3px (Minimal horizontal &amp; vertical waste)" Style="{StaticResource Zen.Style.TextBlock.Body}" Margin="0,0,0,4" />
+                        <TextBlock Text="• Table Row Height: 26px (High density table displays)" Style="{StaticResource Zen.Style.TextBlock.Body}" Margin="0,0,0,4" />
+                        <TextBlock Text="• ScrollBars: 8px slim trackless design" Style="{StaticResource Zen.Style.TextBlock.Body}" Margin="0,0,0,4" />
+                        <TextBlock Text="• Result: Up to 40% more usable content density than standard UI frameworks." Foreground="{StaticResource Zen.Brush.Foreground.VibrantGreen}" FontWeight="Bold" Margin="0,4,0,0" />
+                    </StackPanel>
+                </controls:ZenCard>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,737 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:VellumUI.Controls"
+                    xmlns:converters="clr-namespace:VellumUI.Converters">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Dimensions.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Typography.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Icons.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/Badge.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisConverter" />
+    <converters:BoolToVisibilityConverter x:Key="InverseBoolToVisConverter" Invert="True" />
+    <converters:NullToVisibilityConverter x:Key="NullToVisConverter" />
+
+    <!-- ================================================================= -->
+    <!-- ZEN UI TOP MENU & LEFT MENU STYLES                                -->
+    <!-- ================================================================= -->
+
+    <!-- TopMenuItem Style -->
+    <Style x:Key="Zen.Style.TopMenuItem" TargetType="{x:Type controls:ZenTopMenuItem}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Secondary}" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontFamily" Value="{StaticResource Zen.Font.Family}" />
+        <Setter Property="FontSize" Value="{StaticResource Zen.Font.Size.Body}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenTopMenuItem}">
+                    <Grid x:Name="root">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0,0,0,2"
+                                Padding="{TemplateBinding Padding}"
+                                Margin="1,0"
+                                SnapsToDevicePixels="True">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <!-- Optional Icon -->
+                                <Path x:Name="icon"
+                                      Data="{TemplateBinding IconGeometry}"
+                                      Width="14"
+                                      Height="14"
+                                      Fill="{TemplateBinding Foreground}"
+                                      Stretch="Uniform"
+                                      Margin="0,0,6,0"
+                                      VerticalAlignment="Center"
+                                      Visibility="{Binding IconGeometry, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource NullToVisConverter}}" />
+
+                                <!-- Header -->
+                                <ContentPresenter ContentSource="Header"
+                                                  RecognizesAccessKey="True"
+                                                  VerticalAlignment="Center" />
+
+                                <!-- Optional Badge -->
+                                <ContentPresenter Content="{TemplateBinding Badge}"
+                                                  Margin="6,0,0,0"
+                                                  VerticalAlignment="Center"
+                                                  Visibility="{Binding Badge, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource NullToVisConverter}}" />
+
+                                <!-- Dropdown Chevron if has items -->
+                                <Path x:Name="arrow"
+                                      Data="{StaticResource Zen.Icon.Geometry.ChevronDown}"
+                                      Fill="{TemplateBinding Foreground}"
+                                      Width="8"
+                                      Height="8"
+                                      Stretch="Uniform"
+                                      Margin="6,0,0,0"
+                                      VerticalAlignment="Center"
+                                      Visibility="Collapsed" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Dropdown Popup -->
+                        <Popup x:Name="PART_Popup"
+                               AllowsTransparency="True"
+                               IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                               Placement="Bottom"
+                               Focusable="False"
+                               PopupAnimation="Fade">
+                            <Border x:Name="SubMenuBorder"
+                                    Background="{StaticResource Zen.Brush.Background.Popup}"
+                                    BorderBrush="{StaticResource Zen.Brush.Border.Default}"
+                                    BorderThickness="{StaticResource Zen.Thickness.Border}"
+                                    CornerRadius="{StaticResource Zen.CornerRadius.Default}"
+                                    Padding="2"
+                                    Margin="0,2,0,4"
+                                    SnapsToDevicePixels="True">
+                                <ScrollViewer CanContentScroll="True" SnapsToDevicePixels="True">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="True">
+                            <Setter TargetName="arrow" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsSubmenuOpen" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Zen.Brush.Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsActive" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Zen.Brush.Primary}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+                            <Setter Property="FontWeight" Value="{StaticResource Zen.Font.Weight.Medium}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ZenTopMenuItem}" BasedOn="{StaticResource Zen.Style.TopMenuItem}" />
+
+    <!-- TopMenu Bar Style -->
+    <Style x:Key="Zen.Style.TopMenu" TargetType="{x:Type controls:ZenTopMenu}">
+        <Setter Property="Background" Value="{StaticResource Zen.Brush.Background.Header}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Subtle}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Height" Value="{StaticResource Zen.Height.Header}" />
+        <Setter Property="Padding" Value="{StaticResource Zen.Padding.Header}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenTopMenu}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Brand / Logo Area -->
+                            <ContentPresenter Grid.Column="0"
+                                              Content="{TemplateBinding BrandContent}"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,12,0" />
+
+                            <!-- Top Menu Items Flow -->
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        IsItemsHost="True"
+                                        VerticalAlignment="Center" />
+
+                            <!-- Actions / Search Area -->
+                            <ContentPresenter Grid.Column="2"
+                                              Content="{TemplateBinding ActionsContent}"
+                                              VerticalAlignment="Center"
+                                              Margin="8,0" />
+
+                            <!-- Right Status / Window Controls -->
+                            <ContentPresenter Grid.Column="3"
+                                              Content="{TemplateBinding RightContent}"
+                                              VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ZenTopMenu}" BasedOn="{StaticResource Zen.Style.TopMenu}" />
+
+    <!-- ================================================================= -->
+    <!-- STANDARD MENU & MENUITEM TEMPLATES & STYLES                       -->
+    <!-- ================================================================= -->
+
+    <!-- TopLevelHeader Template (e.g. File, Edit on Menu bar) -->
+    <ControlTemplate x:Key="Zen.Template.MenuItem.TopLevelHeader" TargetType="{x:Type MenuItem}">
+        <Grid SnapsToDevicePixels="True">
+            <Border x:Name="border"
+                    Background="{TemplateBinding Background}"
+                    Padding="{TemplateBinding Padding}"
+                    Margin="1,0"
+                    CornerRadius="{StaticResource Zen.CornerRadius.Default}"
+                    SnapsToDevicePixels="True">
+                <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" VerticalAlignment="Center" />
+            </Border>
+            <Popup x:Name="PART_Popup"
+                   AllowsTransparency="True"
+                   IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                   Placement="Bottom"
+                   Focusable="False"
+                   PopupAnimation="Fade">
+                <Border Background="{StaticResource Zen.Brush.Background.Popup}"
+                        BorderBrush="{StaticResource Zen.Brush.Border.Default}"
+                        BorderThickness="{StaticResource Zen.Thickness.Border}"
+                        CornerRadius="{StaticResource Zen.CornerRadius.Default}"
+                        Padding="2"
+                        Margin="0,2,0,4"
+                        SnapsToDevicePixels="True">
+                    <ScrollViewer CanContentScroll="True" SnapsToDevicePixels="True">
+                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </ScrollViewer>
+                </Border>
+            </Popup>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+            </Trigger>
+            <Trigger Property="IsSubmenuOpen" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- TopLevelItem Template -->
+    <ControlTemplate x:Key="Zen.Template.MenuItem.TopLevelItem" TargetType="{x:Type MenuItem}">
+        <Border x:Name="border"
+                Background="{TemplateBinding Background}"
+                Padding="{TemplateBinding Padding}"
+                Margin="1,0"
+                CornerRadius="{StaticResource Zen.CornerRadius.Default}"
+                SnapsToDevicePixels="True">
+            <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" VerticalAlignment="Center" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- SubmenuHeader Template -->
+    <ControlTemplate x:Key="Zen.Template.MenuItem.SubmenuHeader" TargetType="{x:Type MenuItem}">
+        <Border x:Name="border"
+                Background="{TemplateBinding Background}"
+                Padding="{TemplateBinding Padding}"
+                CornerRadius="{StaticResource Zen.CornerRadius.Default}"
+                SnapsToDevicePixels="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Shortcut" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ContentPresenter x:Name="Icon"
+                                  Grid.Column="0"
+                                  ContentSource="Icon"
+                                  Margin="0,0,6,0"
+                                  VerticalAlignment="Center"
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
+                <ContentPresenter x:Name="HeaderHost"
+                                  Grid.Column="1"
+                                  ContentSource="Header"
+                                  RecognizesAccessKey="True"
+                                  VerticalAlignment="Center"
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
+                <TextBlock x:Name="InputGesture"
+                           Grid.Column="2"
+                           Text="{TemplateBinding InputGestureText}"
+                           Foreground="{StaticResource Zen.Brush.Foreground.Muted}"
+                           FontSize="{StaticResource Zen.Font.Size.Caption}"
+                           Margin="12,0,4,0"
+                           VerticalAlignment="Center" />
+
+                <Path x:Name="RightArrow"
+                      Grid.Column="3"
+                      Data="{StaticResource Zen.Icon.Geometry.ChevronRight}"
+                      Fill="{StaticResource Zen.Brush.Foreground.Secondary}"
+                      Width="8"
+                      Height="8"
+                      Stretch="Uniform"
+                      Margin="6,0,0,0"
+                      VerticalAlignment="Center" />
+
+                <Popup x:Name="PART_Popup"
+                       AllowsTransparency="True"
+                       IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                       Placement="Right"
+                       Focusable="False"
+                       PopupAnimation="Fade">
+                    <Border Background="{StaticResource Zen.Brush.Background.Popup}"
+                            BorderBrush="{StaticResource Zen.Brush.Border.Default}"
+                            BorderThickness="{StaticResource Zen.Thickness.Border}"
+                            CornerRadius="{StaticResource Zen.CornerRadius.Default}"
+                            Padding="2"
+                            Margin="2,0,0,0"
+                            SnapsToDevicePixels="True">
+                        <ScrollViewer CanContentScroll="True" SnapsToDevicePixels="True">
+                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        </ScrollViewer>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+                <Setter TargetName="RightArrow" Property="Fill" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- SubmenuItem Template -->
+    <ControlTemplate x:Key="Zen.Template.MenuItem.SubmenuItem" TargetType="{x:Type MenuItem}">
+        <Border x:Name="border"
+                Background="{TemplateBinding Background}"
+                Padding="{TemplateBinding Padding}"
+                CornerRadius="{StaticResource Zen.CornerRadius.Default}"
+                SnapsToDevicePixels="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="Shortcut" />
+                </Grid.ColumnDefinitions>
+
+                <ContentPresenter x:Name="Icon"
+                                  Grid.Column="0"
+                                  ContentSource="Icon"
+                                  Margin="0,0,6,0"
+                                  VerticalAlignment="Center"
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
+                <ContentPresenter x:Name="HeaderHost"
+                                  Grid.Column="1"
+                                  ContentSource="Header"
+                                  RecognizesAccessKey="True"
+                                  VerticalAlignment="Center"
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
+                <TextBlock x:Name="InputGesture"
+                           Grid.Column="2"
+                           Text="{TemplateBinding InputGestureText}"
+                           Foreground="{StaticResource Zen.Brush.Foreground.Muted}"
+                           FontSize="{StaticResource Zen.Font.Size.Caption}"
+                           Margin="12,0,4,0"
+                           VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- Standard MenuItem Style -->
+    <Style x:Key="Zen.Style.MenuItem" TargetType="{x:Type MenuItem}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+        <Setter Property="Padding" Value="{StaticResource Zen.Padding.MenuItem}" />
+        <Setter Property="MinHeight" Value="{StaticResource Zen.Height.MenuItem}" />
+        <Setter Property="FontFamily" Value="{StaticResource Zen.Font.Family}" />
+        <Setter Property="FontSize" Value="{StaticResource Zen.Font.Size.Body}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template" Value="{StaticResource Zen.Template.MenuItem.SubmenuItem}" />
+        <Style.Triggers>
+            <Trigger Property="Role" Value="TopLevelHeader">
+                <Setter Property="Template" Value="{StaticResource Zen.Template.MenuItem.TopLevelHeader}" />
+                <Setter Property="Padding" Value="8,4" />
+                <Setter Property="MinHeight" Value="24" />
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Secondary}" />
+            </Trigger>
+            <Trigger Property="Role" Value="TopLevelItem">
+                <Setter Property="Template" Value="{StaticResource Zen.Template.MenuItem.TopLevelItem}" />
+                <Setter Property="Padding" Value="8,4" />
+                <Setter Property="MinHeight" Value="24" />
+                <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Secondary}" />
+            </Trigger>
+            <Trigger Property="Role" Value="SubmenuHeader">
+                <Setter Property="Template" Value="{StaticResource Zen.Template.MenuItem.SubmenuHeader}" />
+            </Trigger>
+            <Trigger Property="Role" Value="SubmenuItem">
+                <Setter Property="Template" Value="{StaticResource Zen.Template.MenuItem.SubmenuItem}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource Zen.Style.MenuItem}" />
+
+    <!-- Standard Menu Style -->
+    <Style x:Key="Zen.Style.Menu" TargetType="{x:Type Menu}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{StaticResource Zen.Font.Family}" />
+        <Setter Property="FontSize" Value="{StaticResource Zen.Font.Size.Body}" />
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Secondary}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Menu}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="True">
+                        <StackPanel IsItemsHost="True" Orientation="Horizontal" ClipToBounds="True" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource Zen.Style.Menu}" />
+
+    <!-- Standard ContextMenu -->
+    <Style x:Key="Zen.Style.ContextMenu" TargetType="{x:Type ContextMenu}">
+        <Setter Property="Background" Value="{StaticResource Zen.Brush.Background.Popup}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Default}" />
+        <Setter Property="BorderThickness" Value="{StaticResource Zen.Thickness.Border}" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="Grid.IsSharedSizeScope" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{StaticResource Zen.CornerRadius.Default}"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="True">
+                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource Zen.Style.ContextMenu}" />
+
+    <!-- ================================================================= -->
+    <!-- LEFT MENU / SIDEBAR NAVIGATION STYLES                             -->
+    <!-- ================================================================= -->
+
+    <!-- ZenNavItem Style -->
+    <Style x:Key="Zen.Style.NavItem" TargetType="{x:Type controls:ZenNavItem}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Secondary}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="8,5" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="FontFamily" Value="{StaticResource Zen.Font.Family}" />
+        <Setter Property="FontSize" Value="{StaticResource Zen.Font.Size.Body}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenNavItem}">
+                    <Grid Margin="6,1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Main Item Bar -->
+                        <Border x:Name="border"
+                                Grid.Row="0"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="{StaticResource Zen.CornerRadius.Default}"
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Left Active Indicator Pill (visible when Selected) -->
+                                <Border x:Name="activeIndicator"
+                                        Grid.Column="0"
+                                        Width="3"
+                                        Height="14"
+                                        Background="{StaticResource Zen.Brush.Primary}"
+                                        CornerRadius="1.5"
+                                        Margin="-4,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Visibility="Collapsed" />
+
+                                <!-- Icon -->
+                                <Path x:Name="icon"
+                                      Grid.Column="1"
+                                      Data="{TemplateBinding Icon}"
+                                      Width="14"
+                                      Height="14"
+                                      Fill="{StaticResource Zen.Brush.Foreground.Muted}"
+                                      Stretch="Uniform"
+                                      Margin="0,0,8,0"
+                                      VerticalAlignment="Center"
+                                      Visibility="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource NullToVisConverter}}" />
+
+                                <!-- Header Title -->
+                                <ContentPresenter x:Name="header"
+                                                  Grid.Column="2"
+                                                  ContentSource="Header"
+                                                  RecognizesAccessKey="True"
+                                                  VerticalAlignment="Center" />
+
+                                <!-- Badge -->
+                                <controls:ZenBadge x:Name="badge"
+                                                   Grid.Column="3"
+                                                   Content="{TemplateBinding Badge}"
+                                                   Variant="{TemplateBinding BadgeVariant}"
+                                                   Margin="6,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   Visibility="{Binding Badge, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource NullToVisConverter}}" />
+
+                                <!-- Submenu Expander Chevron -->
+                                <Path x:Name="expanderArrow"
+                                      Grid.Column="4"
+                                      Data="{StaticResource Zen.Icon.Geometry.ChevronRight}"
+                                      Fill="{StaticResource Zen.Brush.Foreground.Muted}"
+                                      Width="8"
+                                      Height="8"
+                                      Stretch="Uniform"
+                                      Margin="6,0,2,0"
+                                      VerticalAlignment="Center"
+                                      Visibility="Collapsed" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Sub-Items Panel -->
+                        <Border x:Name="subItemsHost"
+                                Grid.Row="1"
+                                Margin="16,0,0,0"
+                                Visibility="Collapsed">
+                            <StackPanel IsItemsHost="True" />
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="True">
+                            <Setter TargetName="expanderArrow" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter TargetName="subItemsHost" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="expanderArrow" Property="Data" Value="{StaticResource Zen.Icon.Geometry.ChevronDown}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                            <Setter TargetName="icon" Property="Fill" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Primary.Muted}" />
+                            <Setter TargetName="activeIndicator" Property="Visibility" Value="Visible" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                            <Setter Property="FontWeight" Value="{StaticResource Zen.Font.Weight.Medium}" />
+                            <Setter TargetName="icon" Property="Fill" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsCompact, RelativeSource={RelativeSource AncestorType={x:Type controls:ZenLeftNav}}}" Value="True">
+                            <Setter TargetName="header" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="badge" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="expanderArrow" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="icon" Property="Margin" Value="0" />
+                            <Setter TargetName="icon" Property="HorizontalAlignment" Value="Center" />
+                            <Setter TargetName="border" Property="Padding" Value="4,5" />
+                            <Setter Property="ToolTip" Value="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </DataTrigger>
+                        <Trigger Property="IsCompact" Value="True">
+                            <Setter TargetName="header" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="badge" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="expanderArrow" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="icon" Property="Margin" Value="0" />
+                            <Setter TargetName="icon" Property="HorizontalAlignment" Value="Center" />
+                            <Setter TargetName="border" Property="Padding" Value="4,5" />
+                            <Setter Property="ToolTip" Value="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ZenNavItem}" BasedOn="{StaticResource Zen.Style.NavItem}" />
+
+    <!-- ZenNavSection (Section Separator Header) -->
+    <Style x:Key="Zen.Style.NavSection" TargetType="{x:Type controls:ZenNavSection}">
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+        <Setter Property="FontFamily" Value="{StaticResource Zen.Font.Family}" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="FontWeight" Value="{StaticResource Zen.Font.Weight.Bold}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0,14,0,4" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenNavSection}">
+                    <StackPanel x:Name="rootPanel" Margin="{TemplateBinding Margin}">
+                        <!-- Full-width Section Divider Line -->
+                        <Rectangle x:Name="dividerLine"
+                                   Height="1"
+                                   Fill="{StaticResource Zen.Brush.Border.Divider}"
+                                   Margin="6,0,6,8"
+                                   Opacity="0.8" />
+
+                        <!-- Section Header Row -->
+                        <Grid x:Name="headerRow" Margin="10,0,10,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Glowing Accent Indicator -->
+                            <Border Grid.Column="0"
+                                    Width="4"
+                                    Height="4"
+                                    CornerRadius="2"
+                                    Background="{StaticResource Zen.Brush.Foreground.VibrantCyan}"
+                                    Margin="0,0,6,0"
+                                    VerticalAlignment="Center" />
+
+                            <!-- Uppercase Category Header Text -->
+                            <ContentPresenter Grid.Column="1"
+                                              ContentSource="Header"
+                                              RecognizesAccessKey="True"
+                                              VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsCompact, RelativeSource={RelativeSource AncestorType={x:Type controls:ZenLeftNav}}}" Value="True">
+                            <Setter TargetName="headerRow" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="dividerLine" Property="Margin" Value="6,4,6,4" />
+                            <Setter TargetName="rootPanel" Property="Margin" Value="0,4,0,4" />
+                            <Setter Property="ToolTip" Value="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </DataTrigger>
+                        <Trigger Property="IsCompact" Value="True">
+                            <Setter TargetName="headerRow" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="dividerLine" Property="Margin" Value="6,4,6,4" />
+                            <Setter TargetName="rootPanel" Property="Margin" Value="0,4,0,4" />
+                            <Setter Property="ToolTip" Value="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ZenNavSection}" BasedOn="{StaticResource Zen.Style.NavSection}" />
+
+    <!-- ZenLeftNav Style -->
+    <Style x:Key="Zen.Style.LeftNav" TargetType="{x:Type controls:ZenLeftNav}">
+        <Setter Property="Background" Value="{StaticResource Zen.Brush.Background.Sidebar}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Subtle}" />
+        <Setter Property="BorderThickness" Value="0,0,1,0" />
+        <Setter Property="Width" Value="{StaticResource Zen.Width.Sidebar.Expanded}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenLeftNav}">
+                    <Border x:Name="navBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Width="{TemplateBinding Width}"
+                            SnapsToDevicePixels="True">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Sidebar Header (Logo / Title / Toggle) -->
+                            <ContentPresenter Grid.Row="0"
+                                              ContentSource="Header"
+                                              RecognizesAccessKey="True" />
+
+                            <!-- Navigation Items Host -->
+                            <ScrollViewer Grid.Row="1"
+                                          HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Auto"
+                                          Padding="2,4">
+                                <StackPanel IsItemsHost="True" />
+                            </ScrollViewer>
+
+                            <!-- Sidebar Footer -->
+                            <ContentPresenter Grid.Row="2"
+                                              Content="{TemplateBinding Footer}"
+                                              RecognizesAccessKey="True" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsCompact" Value="True">
+                            <Setter Property="Width" Value="{Binding CompactWidth, RelativeSource={RelativeSource Self}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ZenLeftNav}" BasedOn="{StaticResource Zen.Style.LeftNav}" />
+
+</ResourceDictionary>

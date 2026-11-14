@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="VellumUI.Demo.Views.DataTablesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:VellumUI.Controls;assembly=VellumUI">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="8,4">
+        <StackPanel>
+            <TextBlock Text="Data Tables &amp; Hierarchical Views" Style="{StaticResource Zen.Style.TextBlock.Heading}" />
+            <TextBlock Text="High performance DataGrids, ListViews, and TreeViews styled for maximal data visibility"
+                       Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,2,0,8" />
+
+            <!-- Main DataGrid Card -->
+            <controls:ZenCard Header="ADVANCED DATAGRID" Subtitle="Sorting, alternate rows &amp; custom cell templates" ShowTopAccent="True" HighlightBrush="{StaticResource Zen.Brush.Primary}" Margin="0,0,0,8">
+                <controls:ZenCard.HeaderAction>
+                    <StackPanel Orientation="Horizontal">
+                        <controls:ZenSearchBox Placeholder="Filter table..." Width="180" Height="24" Margin="0,0,6,0" />
+                        <Button Style="{StaticResource Zen.Style.Button.Surface}" Height="24" Padding="6,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource Zen.Icon.Geometry.Filter}" Width="10" Height="10" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" Margin="0,0,4,0" />
+                                <TextBlock Text="Filter" FontSize="{StaticResource Zen.Font.Size.Small}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </controls:ZenCard.HeaderAction>
+
+                <DataGrid ItemsSource="{Binding Servers}" AutoGenerateColumns="False" CanUserAddRows="False" MinHeight="160">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="IDENTIFIER" Binding="{Binding ServerId}" Width="110" />
+                        <DataGridTextColumn Header="INSTANCE NAME" Binding="{Binding Name}" Width="*" />
+                        <DataGridTextColumn Header="REGION" Binding="{Binding Region}" Width="95" />
+                        <DataGridTemplateColumn Header="CPU LOAD" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding CpuUsage, StringFormat='{}{0}%'}" Width="36" Foreground="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+                                        <ProgressBar Grid.Column="1" Value="{Binding CpuUsage}" Maximum="100" Height="4" VerticalAlignment="Center" Foreground="{StaticResource Zen.Brush.Primary}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="MEMORY" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding MemoryUsage, StringFormat='{}{0}%'}" Width="36" Foreground="{StaticResource Zen.Brush.Foreground.VibrantPurple}" />
+                                        <ProgressBar Grid.Column="1" Value="{Binding MemoryUsage}" Maximum="100" Height="4" VerticalAlignment="Center" Foreground="{StaticResource Zen.Brush.Secondary}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="HEALTH" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <controls:ZenBadge Content="{Binding Status}" Variant="{Binding StatusVariant}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="LATENCY" Binding="{Binding Latency}" Width="70" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </controls:ZenCard>
+
+            <!-- Lower Row: TreeView & ListView -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- TreeView Demonstration -->
+                <controls:ZenCard Grid.Column="0" Header="HIERARCHICAL TREEVIEW" Subtitle="Collapsible nodes &amp; assets" Margin="0,0,4,0">
+                    <TreeView MinHeight="160" Background="{StaticResource Zen.Brush.Background.Canvas}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1">
+                        <TreeViewItem Header="src" IsExpanded="True">
+                            <TreeViewItem Header="VellumUI" IsExpanded="True">
+                                <TreeViewItem Header="Controls">
+                                    <TreeViewItem Header="ZenTopMenu.cs" />
+                                    <TreeViewItem Header="ZenLeftNav.cs" />
+                                    <TreeViewItem Header="ZenCard.cs" />
+                                    <TreeViewItem Header="ZenBadge.cs" />
+                                    <TreeViewItem Header="ZenToggleSwitch.cs" />
+                                    <TreeViewItem Header="ZenSearchBox.cs" />
+                                </TreeViewItem>
+                                <TreeViewItem Header="Themes" IsExpanded="True">
+                                    <TreeViewItem Header="Colors.xaml" />
+                                    <TreeViewItem Header="Dimensions.xaml" />
+                                    <TreeViewItem Header="Typography.xaml" />
+                                    <TreeViewItem Header="ZenTheme.xaml" />
+                                </TreeViewItem>
+                            </TreeViewItem>
+                            <TreeViewItem Header="VellumUI.Demo" IsExpanded="True">
+                                <TreeViewItem Header="MainWindow.xaml" />
+                                <TreeViewItem Header="App.xaml" />
+                            </TreeViewItem>
+                        </TreeViewItem>
+                    </TreeView>
+                </controls:ZenCard>
+
+                <!-- Project Tasks ListView -->
+                <controls:ZenCard Grid.Column="1" Header="MANAGED TASK LISTVIEW" Subtitle="Dense checklist items" Margin="4,0,0,0">
+                    <ListView ItemsSource="{Binding Tasks}" MinHeight="160">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding IsCompleted}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Id}" Style="{StaticResource Zen.Style.TextBlock.Code}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="2" Text="{Binding Title}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    <controls:ZenBadge Grid.Column="3" Content="{Binding Priority}" Variant="{Binding PriorityVariant}" Margin="6,0,0,0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </controls:ZenCard>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

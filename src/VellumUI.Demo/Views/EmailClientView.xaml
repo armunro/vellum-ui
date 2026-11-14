@@ -1,0 +1,524 @@
+﻿<UserControl x:Class="VellumUI.Demo.Views.EmailClientView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:VellumUI.Controls;assembly=VellumUI"
+             xmlns:converters="clr-namespace:VellumUI.Converters;assembly=VellumUI"
+             xmlns:viewmodels="clr-namespace:VellumUI.Demo.ViewModels">
+
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisConverter" />
+        <converters:BoolToVisibilityConverter x:Key="InverseBoolToVisConverter" Invert="True" />
+        <converters:NullToVisibilityConverter x:Key="NullToVisConverter" />
+    </UserControl.Resources>
+
+    <Grid x:Name="RootGrid" Background="{StaticResource Zen.Brush.Background.Canvas}" Margin="6,4,6,6">
+        <Grid.DataContext>
+            <viewmodels:EmailClientViewModel />
+        </Grid.DataContext>
+        <Grid.RowDefinitions>
+            <!-- Top App Bar / Email Controls Toolbar -->
+            <RowDefinition Height="Auto" />
+            <!-- Optional Notification Callout -->
+            <RowDefinition Height="Auto" />
+            <!-- 3-Pane Email Workspace -->
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- TOP TOOLBAR: Quick Actions, Global Search, Status -->
+        <Border Grid.Row="0"
+                Background="{StaticResource Zen.Brush.Background.Surface}"
+                BorderBrush="{StaticResource Zen.Brush.Border.Subtle}"
+                BorderThickness="1"
+                CornerRadius="2"
+                Padding="8,6"
+                Margin="0,0,0,6">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: Application Brand & Sync Status -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Path Data="{StaticResource Zen.Icon.Geometry.Mail}" Width="15" Height="15" Fill="{StaticResource Zen.Brush.Foreground.VibrantCyan}" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center" />
+                    <TextBlock Text="Vellum Mail" Style="{StaticResource Zen.Style.TextBlock.Heading}" FontSize="{StaticResource Zen.Font.Size.Subheading}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <controls:ZenBadge Content="v1.2" Variant="Primary" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <controls:ZenStatusIndicator Status="Online" IsPulsing="True" VerticalAlignment="Center" ToolTip="Connected to Exchange / IMAP" Margin="0,0,4,0" />
+                    <TextBlock Text="Synced" Style="{StaticResource Zen.Style.TextBlock.Muted}" VerticalAlignment="Center" FontSize="{StaticResource Zen.Font.Size.Micro}" />
+                </StackPanel>
+
+                <!-- Middle: Search Box -->
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Center">
+                    <controls:ZenSearchBox Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                                           Placeholder="Search mail, senders, keywords (Ctrl+K)..."
+                                           Width="280" Height="26" />
+                </StackPanel>
+
+                <!-- Right: Action Buttons -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Command="{Binding RefreshCommand}" Style="{StaticResource Zen.Style.Button.Surface}" Margin="0,0,4,0" ToolTip="Check for new messages">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Refresh}" Width="11" Height="11" Fill="{StaticResource Zen.Brush.Foreground.VibrantCyan}" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="Sync" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                    <Button Command="{Binding MarkAllReadCommand}" Style="{StaticResource Zen.Style.Button.Outline}" Margin="0,0,4,0" ToolTip="Mark all messages in view as read">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Check}" Width="11" Height="11" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="Mark Read" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                    <Button Style="{StaticResource Zen.Style.Button.Primary}" ToolTip="Compose New Message">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Plus}" Width="11" Height="11" Fill="#FFFFFF" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="Compose" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- STATUS / NOTIFICATION CALLOUT BANNER -->
+        <controls:ZenCallout Grid.Row="1"
+                             Title="Mailbox Notification"
+                             Severity="Info"
+                             IsDismissible="True"
+                             Margin="0,0,0,6"
+                             Visibility="{Binding IsStatusBannerVisible, Converter={StaticResource BoolToVisConverter}}">
+            <TextBlock Text="{Binding StatusBanner}" Foreground="{StaticResource Zen.Brush.Foreground.Primary}" />
+        </controls:ZenCallout>
+
+        <!-- 3-PANE WORKSPACE: Folders & Quota | Conversations List | Message Detail & Reply -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <!-- Left Pane: Mail Folders & Tags (width: 170) -->
+                <ColumnDefinition Width="170" MinWidth="140" MaxWidth="240" />
+                <!-- Middle Pane: Conversation List (width: 310) -->
+                <ColumnDefinition Width="310" MinWidth="240" MaxWidth="450" />
+                <!-- Right Pane: Reading Pane & Reply Area (flexible) -->
+                <ColumnDefinition Width="*" MinWidth="340" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ========================================================= -->
+            <!-- PANE 1: FOLDERS, TAGS & STORAGE QUOTA                     -->
+            <!-- ========================================================= -->
+            <Grid Grid.Column="0" Margin="0,0,6,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <controls:ZenCard Grid.Row="0" Header="MAILBOXES" Subtitle="Folders &amp; Labels" Padding="0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Margin="4">
+                            <!-- Folders List -->
+                            <ItemsControl ItemsSource="{Binding Folders}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding DataContext.SelectFolderCommand, ElementName=RootGrid}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource Zen.Style.Button.Ghost}"
+                                                HorizontalContentAlignment="Stretch"
+                                                Padding="6,4" Margin="0,1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="0" Data="{StaticResource Zen.Icon.Geometry.Folder}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.VibrantCyan}" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{Binding DisplayName}" VerticalAlignment="Center" FontSize="{StaticResource Zen.Font.Size.Caption}" Foreground="{StaticResource Zen.Brush.Foreground.Primary}" TextTrimming="CharacterEllipsis" />
+                                                <controls:ZenBadge Grid.Column="2" Content="{Binding UnreadCountString}" Variant="{Binding BadgeVariant}" Visibility="{Binding HasUnread, Converter={StaticResource BoolToVisConverter}}" VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Tags Section Header -->
+                            <Separator Background="{StaticResource Zen.Brush.Border.Subtle}" Margin="0,8,0,6" />
+                            <TextBlock Text="CATEGORIES &amp; TAGS" Style="{StaticResource Zen.Style.TextBlock.Muted}" FontSize="{StaticResource Zen.Font.Size.Micro}" FontWeight="Bold" Margin="4,0,0,4" />
+
+                            <WrapPanel Margin="2,0,2,4">
+                                <controls:ZenTag Content="DevOps" IsSelectable="True" IsSelected="True" Margin="2" />
+                                <controls:ZenTag Content="Design" IsSelectable="True" Margin="2" />
+                                <controls:ZenTag Content="Security" IsSelectable="True" Margin="2" />
+                                <controls:ZenTag Content="Work" IsSelectable="True" Margin="2" />
+                                <controls:ZenTag Content="GitHub" IsSelectable="True" Margin="2" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </controls:ZenCard>
+
+                <!-- Storage Quota Footer Card -->
+                <controls:ZenCard Grid.Row="1" Header="STORAGE QUOTA" Subtitle="Cloud Mailbox" Margin="0,6,0,0" Padding="8,6">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="7.4 GB / 15 GB" Style="{StaticResource Zen.Style.TextBlock.Caption}" Foreground="{StaticResource Zen.Brush.Foreground.Secondary}" />
+                            <TextBlock Grid.Column="1" Text="49%" Style="{StaticResource Zen.Style.TextBlock.Code}" Foreground="{StaticResource Zen.Brush.Foreground.VibrantCyan}" FontWeight="Bold" />
+                        </Grid>
+                        <ProgressBar Value="{Binding StoragePercentage, Mode=OneWay}" Maximum="100" Height="6" Foreground="{StaticResource Zen.Brush.Primary}" Background="{StaticResource Zen.Brush.Background.Input}" BorderThickness="0" Margin="0,0,0,4" />
+                        <TextBlock Text="Encrypted storage active" Style="{StaticResource Zen.Style.TextBlock.Micro}" Foreground="{StaticResource Zen.Brush.Foreground.Muted}" />
+                    </StackPanel>
+                </controls:ZenCard>
+            </Grid>
+
+            <!-- ========================================================= -->
+            <!-- PANE 2: CONVERSATION LIST (MASTER VIEW)                   -->
+            <!-- ========================================================= -->
+            <controls:ZenCard Grid.Column="1" Header="CONVERSATIONS" Subtitle="{Binding SelectedFolder.DisplayName, FallbackValue='Inbox'}" Margin="0,0,6,0" Padding="0">
+                <controls:ZenCard.HeaderAction>
+                    <!-- Filter Quick Switches -->
+                    <StackPanel Orientation="Horizontal">
+                        <Button Command="{Binding SelectFilterCommand}" CommandParameter="All" Content="All" Style="{StaticResource Zen.Style.Button.Ghost}" Padding="4,2" FontSize="{StaticResource Zen.Font.Size.Micro}" />
+                        <Button Command="{Binding SelectFilterCommand}" CommandParameter="Unread" Content="Unread" Style="{StaticResource Zen.Style.Button.Ghost}" Padding="4,2" FontSize="{StaticResource Zen.Font.Size.Micro}" />
+                        <Button Command="{Binding SelectFilterCommand}" CommandParameter="Starred" Content="★" Style="{StaticResource Zen.Style.Button.Ghost}" Padding="4,2" FontSize="{StaticResource Zen.Font.Size.Micro}" ToolTip="Starred only" />
+                        <Button Command="{Binding SelectFilterCommand}" CommandParameter="Attachments" Style="{StaticResource Zen.Style.Button.Ghost}" Padding="4,2" ToolTip="Has Attachments">
+                            <Path Data="{StaticResource Zen.Icon.Geometry.Attachment}" Width="10" Height="10" Fill="{StaticResource Zen.Brush.Foreground.Muted}" Stretch="Uniform" />
+                        </Button>
+                    </StackPanel>
+                </controls:ZenCard.HeaderAction>
+
+                <ListBox ItemsSource="{Binding FilteredEmails}"
+                         SelectedItem="{Binding SelectedEmail, Mode=TwoWay}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="2">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Padding" Value="6,6" />
+                            <Setter Property="Margin" Value="0,1" />
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Subtle}" />
+                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Name="ItemBorder"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Padding="{TemplateBinding Padding}"
+                                                CornerRadius="2">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfacePressed}" />
+                                                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource Zen.Brush.Primary}" />
+                                                <Setter TargetName="ItemBorder" Property="BorderThickness" Value="2,0,0,1" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!-- Top row: Avatar circle, Sender, Date, Star Button -->
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Sender Avatar Circle -->
+                                    <Border Grid.Column="0" Width="20" Height="20" CornerRadius="10" Background="{StaticResource Zen.Brush.Background.Input}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1" Margin="0,0,6,0">
+                                        <TextBlock Text="{Binding SenderInitials}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource Zen.Brush.Foreground.VibrantCyan}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+
+                                    <!-- Sender Name (Bold if unread) -->
+                                    <TextBlock Grid.Column="1" Text="{Binding SenderName}" FontWeight="{Binding FontWeightString}" FontSize="{StaticResource Zen.Font.Size.Caption}" Foreground="{StaticResource Zen.Brush.Foreground.Primary}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+
+                                    <!-- Date -->
+                                    <TextBlock Grid.Column="2" Text="{Binding FormattedDate}" Style="{StaticResource Zen.Style.TextBlock.Micro}" Foreground="{StaticResource Zen.Brush.Foreground.Muted}" VerticalAlignment="Center" Margin="4,0" />
+
+                                    <!-- Star Toggle Button -->
+                                    <Button Grid.Column="3"
+                                            Command="{Binding DataContext.ToggleStarCommand, ElementName=RootGrid}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource Zen.Style.Button.Icon}"
+                                            Width="16" Height="16" Margin="2,0,0,0" ToolTip="Star this conversation">
+                                        <Path Width="11" Height="11" Stretch="Uniform">
+                                            <Path.Style>
+                                                <Style TargetType="Path">
+                                                    <Setter Property="Data" Value="{StaticResource Zen.Icon.Geometry.StarOutline}" />
+                                                    <Setter Property="Fill" Value="{StaticResource Zen.Brush.Foreground.Muted}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsStarred}" Value="True">
+                                                            <Setter Property="Data" Value="{StaticResource Zen.Icon.Geometry.Star}" />
+                                                            <Setter Property="Fill" Value="#FFB300" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Path.Style>
+                                        </Path>
+                                    </Button>
+                                </Grid>
+
+                                <!-- Middle row: Subject line -->
+                                <TextBlock Grid.Row="1" Text="{Binding Subject}" FontWeight="{Binding FontWeightString}" FontSize="{StaticResource Zen.Font.Size.Caption}" Foreground="{StaticResource Zen.Brush.Foreground.Primary}" TextTrimming="CharacterEllipsis" Margin="0,2,0,1" />
+
+                                <!-- Bottom row: Snippet snippet & badges -->
+                                <Grid Grid.Row="2" Margin="0,1,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Preview snippet -->
+                                    <TextBlock Grid.Column="0" Text="{Binding Snippet}" Style="{StaticResource Zen.Style.TextBlock.Secondary}" FontSize="{StaticResource Zen.Font.Size.Micro}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+
+                                    <!-- Attachment icon indicator -->
+                                    <Path Grid.Column="1" Data="{StaticResource Zen.Icon.Geometry.Attachment}" Width="10" Height="10" Fill="{StaticResource Zen.Brush.Foreground.Muted}" Stretch="Uniform" Margin="4,0" VerticalAlignment="Center" Visibility="{Binding HasAttachments, Converter={StaticResource BoolToVisConverter}}" />
+
+                                    <!-- Category Badge -->
+                                    <controls:ZenBadge Grid.Column="2" Content="{Binding Category}" Variant="{Binding CategoryVariant}" VerticalAlignment="Center" Margin="2,0,0,0" />
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </controls:ZenCard>
+
+            <!-- ========================================================= -->
+            <!-- PANE 3: READING PANE & COMPOSER (DETAIL VIEW)             -->
+            <!-- ========================================================= -->
+            <controls:ZenCard Grid.Column="2" Header="MESSAGE PREVIEW" Subtitle="Conversation Details &amp; Actions" Padding="0">
+                <controls:ZenCard.HeaderAction>
+                    <!-- Action Toolbar on Top Right of Card -->
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding HasSelectedEmail, Converter={StaticResource BoolToVisConverter}}">
+                        <Button Command="{Binding ToggleUnreadCommand}" Style="{StaticResource Zen.Style.Button.Icon}" Width="24" Height="24" ToolTip="Toggle Unread" Margin="1,0">
+                            <Path Data="{StaticResource Zen.Icon.Geometry.Mail}" Width="11" Height="11" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" />
+                        </Button>
+                        <Button Command="{Binding ToggleStarCommand}" Style="{StaticResource Zen.Style.Button.Icon}" Width="24" Height="24" ToolTip="Star Conversation" Margin="1,0">
+                            <Path Data="{StaticResource Zen.Icon.Geometry.Star}" Width="11" Height="11" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" />
+                        </Button>
+                        <Button Command="{Binding ArchiveCommand}" Style="{StaticResource Zen.Style.Button.Icon}" Width="24" Height="24" ToolTip="Archive Conversation" Margin="1,0">
+                            <Path Data="{StaticResource Zen.Icon.Geometry.Archive}" Width="11" Height="11" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" />
+                        </Button>
+                        <Button Command="{Binding DeleteCommand}" Style="{StaticResource Zen.Style.Button.Icon}" Width="24" Height="24" ToolTip="Move to Trash" Margin="1,0">
+                            <Path Data="{StaticResource Zen.Icon.Geometry.Trash}" Width="11" Height="11" Fill="{StaticResource Zen.Brush.Foreground.VibrantRose}" Stretch="Uniform" />
+                        </Button>
+                    </StackPanel>
+                </controls:ZenCard.HeaderAction>
+
+                <Grid>
+                    <!-- Empty State placeholder when no email is selected -->
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasSelectedEmail, Converter={StaticResource InverseBoolToVisConverter}}">
+                        <Path Data="{StaticResource Zen.Icon.Geometry.Mail}" Width="36" Height="36" Fill="{StaticResource Zen.Brush.Foreground.Muted}" Stretch="Uniform" HorizontalAlignment="Center" Margin="0,0,0,12" />
+                        <TextBlock Text="No message selected" Style="{StaticResource Zen.Style.TextBlock.Secondary}" HorizontalAlignment="Center" />
+                        <TextBlock Text="Select a conversation from the list to view details and reply" Style="{StaticResource Zen.Style.TextBlock.Muted}" FontSize="{StaticResource Zen.Font.Size.Caption}" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                    </StackPanel>
+
+                    <!-- Active Email Content & Reply Area -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="{Binding HasSelectedEmail, Converter={StaticResource BoolToVisConverter}}" Padding="12,8">
+                        <StackPanel>
+                            <!-- Email Header Block -->
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Big Avatar Circle -->
+                                <Border Grid.Column="0" Width="36" Height="36" CornerRadius="18" Background="{StaticResource Zen.Brush.Background.Input}" BorderBrush="{StaticResource Zen.Brush.Primary}" BorderThickness="1.5" Margin="0,0,10,0" VerticalAlignment="Top">
+                                    <TextBlock Text="{Binding SelectedEmail.SenderInitials}" FontWeight="Bold" FontSize="{StaticResource Zen.Font.Size.Body}" Foreground="{StaticResource Zen.Brush.Foreground.VibrantCyan}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+
+                                <!-- Sender & Recipient Details -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding SelectedEmail.SenderName}" FontWeight="Bold" FontSize="{StaticResource Zen.Font.Size.Body}" Foreground="{StaticResource Zen.Brush.Foreground.Primary}" />
+                                        <TextBlock Text="{Binding SelectedEmail.SenderEmail, StringFormat='{} &lt;{0}&gt;'}" Style="{StaticResource Zen.Style.TextBlock.Secondary}" FontSize="{StaticResource Zen.Font.Size.Caption}" VerticalAlignment="Center" Margin="4,0,0,0" />
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding SelectedEmail.Recipients, StringFormat='{}To: {0}'}" Style="{StaticResource Zen.Style.TextBlock.Muted}" FontSize="{StaticResource Zen.Font.Size.Micro}" Margin="0,2,0,0" />
+                                </StackPanel>
+
+                                <!-- Date & Security Badge -->
+                                <StackPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                    <TextBlock Text="{Binding SelectedEmail.DateTime, StringFormat='{}{0:MMM dd, yyyy  HH:mm}'}" Style="{StaticResource Zen.Style.TextBlock.Code}" Foreground="{StaticResource Zen.Brush.Foreground.Muted}" HorizontalAlignment="Right" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,4,0,0">
+                                        <controls:ZenBadge Content="DKIM VERIFIED" Variant="Success" Margin="0,0,4,0" />
+                                        <controls:ZenBadge Content="{Binding SelectedEmail.Category}" Variant="{Binding SelectedEmail.CategoryVariant}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Email Subject Heading -->
+                            <TextBlock Text="{Binding SelectedEmail.Subject}" Style="{StaticResource Zen.Style.TextBlock.Heading}" FontSize="15" Margin="0,0,0,8" TextWrapping="Wrap" />
+
+                            <!-- Attachment Banner (if email has attachments) -->
+                            <Border Background="{StaticResource Zen.Brush.Background.SurfaceHover}"
+                                    BorderBrush="{StaticResource Zen.Brush.Border.Subtle}"
+                                    BorderThickness="1"
+                                    CornerRadius="2"
+                                    Padding="8,6"
+                                    Margin="0,0,0,10"
+                                    Visibility="{Binding SelectedEmail.HasAttachments, Converter={StaticResource BoolToVisConverter}}">
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                        <Path Data="{StaticResource Zen.Icon.Geometry.Attachment}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.VibrantCyan}" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="ATTACHMENTS" FontWeight="Bold" FontSize="{StaticResource Zen.Font.Size.Micro}" Foreground="{StaticResource Zen.Brush.Foreground.Secondary}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding SelectedEmail.Attachments}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{StaticResource Zen.Brush.Background.Canvas}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1" CornerRadius="2" Padding="6,4" Margin="0,2">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Path Grid.Column="0" Data="{StaticResource Zen.Icon.Geometry.File}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.VibrantCyan}" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="1" Text="{Binding FileName}" Foreground="{StaticResource Zen.Brush.Foreground.Primary}" FontSize="{StaticResource Zen.Font.Size.Caption}" VerticalAlignment="Center" />
+                                                        <controls:ZenBadge Grid.Column="2" Content="{Binding FileSize}" Variant="{Binding BadgeVariant}" Margin="6,0" VerticalAlignment="Center" />
+                                                        <Button Grid.Column="3" Style="{StaticResource Zen.Style.Button.Surface}" Padding="6,2" ToolTip="Download Attachment">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Path Data="{StaticResource Zen.Icon.Geometry.Download}" Width="10" Height="10" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                                                <TextBlock Text="Download" FontSize="{StaticResource Zen.Font.Size.Micro}" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Email Body Display -->
+                            <Border Background="{StaticResource Zen.Brush.Background.Surface}"
+                                    BorderBrush="{StaticResource Zen.Brush.Border.Subtle}"
+                                    BorderThickness="1"
+                                    CornerRadius="2"
+                                    Padding="10,8"
+                                    Margin="0,0,0,10">
+                                <TextBlock Text="{Binding SelectedEmail.Body}"
+                                           Foreground="{StaticResource Zen.Brush.Foreground.Primary}"
+                                           FontSize="{StaticResource Zen.Font.Size.Body}"
+                                           LineHeight="20"
+                                           TextWrapping="Wrap" />
+                            </Border>
+
+                            <!-- Interactive Response Box (ZenTabControl) -->
+                            <controls:ZenCard Header="REPLY / FORWARD MESSAGE" Subtitle="Compose response inline" Margin="0,0,0,4" Padding="8">
+                                <controls:ZenTabControl TabStyle="Pill" MinHeight="160">
+                                    <controls:ZenTabPage Header="Quick Reply" Icon="{StaticResource Zen.Icon.Geometry.Reply}">
+                                        <StackPanel Margin="0,6,0,0">
+                                            <!-- Response Controls Header -->
+                                            <Grid Margin="0,0,0,6">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding SelectedEmail.SenderName, StringFormat='{}Replying to {0}'}" Style="{StaticResource Zen.Style.TextBlock.Caption}" Foreground="{StaticResource Zen.Brush.Foreground.Secondary}" VerticalAlignment="Center" />
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <TextBlock Text="Markdown formatting:" Style="{StaticResource Zen.Style.TextBlock.Micro}" Foreground="{StaticResource Zen.Brush.Foreground.Muted}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                    <controls:ZenToggleSwitch IsChecked="{Binding IsMarkdownEnabled}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <!-- Reply Multi-line text box -->
+                                            <TextBox Text="{Binding ReplyText, UpdateSourceTrigger=PropertyChanged}"
+                                                     AcceptsReturn="True"
+                                                     TextWrapping="Wrap"
+                                                     MinHeight="75"
+                                                     Margin="0,0,0,6" />
+
+                                            <!-- Actions Toolbar -->
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Send Button -->
+                                                <Button Grid.Column="0" Command="{Binding SendReplyCommand}" Style="{StaticResource Zen.Style.Button.Primary}">
+                                                    <Button.ContentTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Path Data="{StaticResource Zen.Icon.Geometry.Send}" Width="11" Height="11" Fill="#FFFFFF" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                                                <TextBlock Text="Send Reply" VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </Button.ContentTemplate>
+                                                </Button>
+
+                                                <!-- Priority selector -->
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
+                                                    <TextBlock Text="Priority:" Style="{StaticResource Zen.Style.TextBlock.Micro}" Foreground="{StaticResource Zen.Brush.Foreground.Muted}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                                    <ComboBox SelectedIndex="0" Width="100" Height="22">
+                                                        <ComboBoxItem Content="Normal" />
+                                                        <ComboBoxItem Content="High" />
+                                                        <ComboBoxItem Content="Urgent" />
+                                                        <ComboBoxItem Content="Low" />
+                                                    </ComboBox>
+                                                </StackPanel>
+
+                                                <!-- Discard button -->
+                                                <Button Grid.Column="2" Content="Discard Draft" Style="{StaticResource Zen.Style.Button.Ghost}" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </controls:ZenTabPage>
+
+                                    <controls:ZenTabPage Header="Forward" Icon="{StaticResource Zen.Icon.Geometry.Forward}">
+                                        <StackPanel Margin="0,6,0,0">
+                                            <Grid Margin="0,0,0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="To:" Style="{StaticResource Zen.Style.TextBlock.Caption}" Foreground="{StaticResource Zen.Brush.Foreground.Secondary}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                <TextBox Grid.Column="1" Text="engineering-leads@vellumui.io" Height="24" />
+                                            </Grid>
+                                            <TextBox Text="FYI - Forwarding proposal and benchmarks for review." AcceptsReturn="True" MinHeight="60" Margin="0,0,0,6" />
+                                            <Button Content="Forward Conversation" Style="{StaticResource Zen.Style.Button.Secondary}" HorizontalAlignment="Left" />
+                                        </StackPanel>
+                                    </controls:ZenTabPage>
+                                </controls:ZenTabControl>
+                            </controls:ZenCard>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </controls:ZenCard>
+        </Grid>
+    </Grid>
+</UserControl>

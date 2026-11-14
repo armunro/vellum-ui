@@ -1,0 +1,32 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Dimensions.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Typography.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Icons.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/Button.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/TextBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/CheckBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/ToggleSwitch.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/ComboBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/Slider.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/ProgressBar.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/ScrollBar.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/TabControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/DataGrid.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/ListBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/Badge.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/Card.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/StatCard.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/Tag.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/SegmentedControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/Callout.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/Menu.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/Expander.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/StatusIndicator.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/Window.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/DatePicker.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Styles/ColorPicker.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

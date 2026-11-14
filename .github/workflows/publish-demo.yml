@@ -1,0 +1,129 @@
+﻿name: Publish VellumUI.Demo Self-Contained Executable
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+    branches:
+      - main
+    paths:
+      - 'src/VellumUI/**'
+      - 'src/VellumUI.Demo/**'
+      - '.github/workflows/publish-demo.yml'
+  pull_request:
+    paths:
+      - 'src/VellumUI/**'
+      - 'src/VellumUI.Demo/**'
+      - '.github/workflows/publish-demo.yml'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g., 1.0.0, leave empty for project default)'
+        required: false
+        type: string
+      create_release_draft:
+        description: 'Create draft GitHub Release on manual dispatch'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  publish-demo:
+    name: Publish Demo (${{ matrix.target.rid }})
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    strategy:
+      matrix:
+        target:
+          - rid: win-x64
+            name: Windows x64
+          - rid: win-arm64
+            name: Windows ARM64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Extract Version
+        id: get_version
+        shell: pwsh
+        run: |
+          $version = "${{ github.event.inputs.version }}"
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            if ($env:GITHUB_REF -like "refs/tags/v*") {
+              $version = $env:GITHUB_REF.Substring(11)
+            }
+          }
+          if (-not [string]::IsNullOrWhiteSpace($version)) {
+            Write-Host "Using explicit version: $version"
+            echo "VERSION_FLAG=/p:Version=$version /p:AssemblyVersion=$version /p:FileVersion=$version" >> $env:GITHUB_ENV
+            echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          } else {
+            Write-Host "Using project default version"
+            echo "VERSION_FLAG=" >> $env:GITHUB_ENV
+            echo "VERSION=" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Restore dependencies
+        run: dotnet restore VellumUI.sln
+
+      - name: Run unit tests
+        run: dotnet test tests/VellumUi.Tests/VellumUi.Tests.csproj -c Release --verbosity normal
+
+      - name: Publish Self-Contained Single-File Executable
+        shell: pwsh
+        run: |
+          $publishDir = "./artifacts/publish/${{ matrix.target.rid }}"
+          dotnet publish src/VellumUI.Demo/VellumUI.Demo.csproj `
+            -c Release `
+            -r ${{ matrix.target.rid }} `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true `
+            $env:VERSION_FLAG `
+            -o $publishDir
+
+      - name: Package Executable into ZIP
+        shell: pwsh
+        run: |
+          $publishDir = "./artifacts/publish/${{ matrix.target.rid }}"
+          $zipName = "VellumUI.Demo-${{ matrix.target.rid }}.zip"
+          $zipPath = "./artifacts/zip/$zipName"
+          New-Item -ItemType Directory -Force -Path "./artifacts/zip"
+          Compress-Archive -Path "$publishDir\*" -DestinationPath $zipPath -Force
+          Write-Host "Created archive: $zipPath"
+
+      - name: Upload Single-File Executable Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VellumUI.Demo-${{ matrix.target.rid }}-exe
+          path: ./artifacts/publish/${{ matrix.target.rid }}/VellumUI.Demo.exe
+
+      - name: Upload Zip Package Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VellumUI.Demo-${{ matrix.target.rid }}-zip
+          path: ./artifacts/zip/*.zip
+
+      - name: Attach Assets to GitHub Release
+        if: |
+          startsWith(github.ref, 'refs/tags/v') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.create_release_draft == 'true')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ./artifacts/zip/*.zip
+            ./artifacts/publish/${{ matrix.target.rid }}/VellumUI.Demo.exe
+          draft: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.create_release_draft == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

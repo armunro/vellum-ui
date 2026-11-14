@@ -1,0 +1,624 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:VellumUI.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Dimensions.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Typography.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/Icons.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- ================================================================= -->
+    <!-- TAB BUTTON STYLES (Close & Add)                                   -->
+    <!-- ================================================================= -->
+
+    <!-- Close Button Style for ZenTabPage -->
+    <Style x:Key="Zen.Style.TabPage.CloseButton" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="6,0,0,0" />
+        <Setter Property="Width" Value="14" />
+        <Setter Property="Height" Value="14" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border"
+                            Background="Transparent"
+                            CornerRadius="2">
+                        <Path x:Name="path"
+                              Data="{StaticResource Zen.Icon.Geometry.Close}"
+                              Fill="{StaticResource Zen.Brush.Foreground.Muted}"
+                              Stretch="Uniform"
+                              Width="7"
+                              Height="7"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                            <Setter TargetName="path" Property="Fill" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfacePressed}" />
+                            <Setter TargetName="path" Property="Fill" Value="{StaticResource Zen.Brush.Primary}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Add Tab Button Style for ZenTabControl -->
+    <Style x:Key="Zen.Style.TabControl.AddButton" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="4,2,2,2" />
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border"
+                            Background="Transparent"
+                            CornerRadius="2">
+                        <Path x:Name="path"
+                              Data="{StaticResource Zen.Icon.Geometry.Plus}"
+                              Fill="{StaticResource Zen.Brush.Foreground.Muted}"
+                              Stretch="Uniform"
+                              Width="10"
+                              Height="10"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                            <Setter TargetName="path" Property="Fill" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfacePressed}" />
+                            <Setter TargetName="path" Property="Fill" Value="{StaticResource Zen.Brush.Primary}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ================================================================= -->
+    <!-- STANDARD WPF TABITEM & TABCONTROL STYLES                          -->
+    <!-- ================================================================= -->
+
+    <!-- Standard TabItem Style -->
+    <Style x:Key="Zen.Style.TabItem" TargetType="{x:Type TabItem}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Secondary}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="{StaticResource Zen.Thickness.None}" />
+        <Setter Property="Padding" Value="{StaticResource Zen.Padding.TabItem}" />
+        <Setter Property="Height" Value="{StaticResource Zen.Height.TabItem}" />
+        <Setter Property="FontFamily" Value="{StaticResource Zen.Font.Family}" />
+        <Setter Property="FontSize" Value="{StaticResource Zen.Font.Size.Body}" />
+        <Setter Property="FontWeight" Value="{StaticResource Zen.Font.Weight.Regular}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="0,0,0,2"
+                            Padding="{TemplateBinding Padding}"
+                            Margin="0,0,2,0"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter x:Name="contentPresenter"
+                                          ContentSource="Header"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Zen.Brush.Primary}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceAlt}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+                            <Setter Property="FontWeight" Value="{StaticResource Zen.Font.Weight.Medium}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource Zen.Style.TabItem}" />
+
+    <!-- Standard TabControl Style -->
+    <Style x:Key="Zen.Style.TabControl" TargetType="{x:Type TabControl}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Subtle}" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="Padding" Value="0,4,0,0" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <Grid KeyboardNavigation.TabNavigation="Local">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Tab Header Strip -->
+                        <Border Grid.Row="0"
+                                Background="{StaticResource Zen.Brush.Background.Canvas}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0,0,0,1"
+                                Padding="2,0,2,0">
+                            <TabPanel x:Name="headerPanel"
+                                      IsItemsHost="True"
+                                      KeyboardNavigation.TabIndex="1"
+                                      Panel.ZIndex="1" />
+                        </Border>
+
+                        <!-- Content Area -->
+                        <Border Grid.Row="1"
+                                Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="PART_SelectedContentHost"
+                                              ContentSource="SelectedContent"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource Zen.Style.TabControl}" />
+
+    <!-- ================================================================= -->
+    <!-- ZEN TAB PAGE & ZEN TAB ITEM STYLES                                -->
+    <!-- ================================================================= -->
+
+    <!-- Default ZenTabPage Style (Underline) -->
+    <Style x:Key="Zen.Style.TabPage" TargetType="{x:Type controls:ZenTabPage}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Secondary}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0,0,0,2" />
+        <Setter Property="Padding" Value="{StaticResource Zen.Padding.TabItem}" />
+        <Setter Property="Height" Value="{StaticResource Zen.Height.TabItem}" />
+        <Setter Property="FontFamily" Value="{StaticResource Zen.Font.Family}" />
+        <Setter Property="FontSize" Value="{StaticResource Zen.Font.Size.Body}" />
+        <Setter Property="FontWeight" Value="{StaticResource Zen.Font.Weight.Regular}" />
+        <Setter Property="CornerRadius" Value="{StaticResource Zen.CornerRadius.Default}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenTabPage}">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            Margin="0,0,2,0"
+                            SnapsToDevicePixels="True">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <!-- Optional Tab Icon -->
+                            <Path x:Name="tabIcon"
+                                  Data="{TemplateBinding Icon}"
+                                  Fill="{TemplateBinding Foreground}"
+                                  Stretch="Uniform"
+                                  Width="12"
+                                  Height="12"
+                                  Margin="0,0,6,0"
+                                  VerticalAlignment="Center" />
+
+                            <!-- Header Content -->
+                            <ContentPresenter x:Name="contentPresenter"
+                                              ContentSource="Header"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              RecognizesAccessKey="True" />
+
+                            <!-- Optional Badge -->
+                            <Border x:Name="badgeBorder"
+                                    Background="{StaticResource Zen.Brush.Background.SurfaceHover}"
+                                    BorderBrush="{StaticResource Zen.Brush.Border.Subtle}"
+                                    BorderThickness="1"
+                                    CornerRadius="2"
+                                    Padding="4,0"
+                                    Margin="6,0,0,0"
+                                    Height="16"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding BadgeText}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           FontSize="{StaticResource Zen.Font.Size.Micro}"
+                                           FontWeight="Medium"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" />
+                            </Border>
+
+                            <!-- Optional Close Button -->
+                            <Button x:Name="closeButton"
+                                    Style="{StaticResource Zen.Style.TabPage.CloseButton}"
+                                    Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=InternalCloseCommand}"
+                                    Visibility="Collapsed"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Hide icon if null -->
+                        <Trigger Property="Icon" Value="{x:Null}">
+                            <Setter TargetName="tabIcon" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <!-- Hide badge if null or empty -->
+                        <Trigger Property="BadgeText" Value="{x:Null}">
+                            <Setter TargetName="badgeBorder" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="BadgeText" Value="">
+                            <Setter TargetName="badgeBorder" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <!-- Show close button if IsClosable -->
+                        <Trigger Property="IsClosable" Value="True">
+                            <Setter TargetName="closeButton" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <!-- Mouse Over -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                        </Trigger>
+                        <!-- Selected -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Zen.Brush.Primary}" />
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceAlt}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+                            <Setter Property="FontWeight" Value="{StaticResource Zen.Font.Weight.Medium}" />
+                            <Setter TargetName="badgeBorder" Property="Background" Value="{StaticResource Zen.Brush.Primary.Muted}" />
+                            <Setter TargetName="badgeBorder" Property="BorderBrush" Value="{StaticResource Zen.Brush.Primary}" />
+                        </Trigger>
+                        <!-- Disabled -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Pill TabPage Style -->
+    <Style x:Key="Zen.Style.TabPage.Pill" TargetType="{x:Type controls:ZenTabPage}" BasedOn="{StaticResource Zen.Style.TabPage}">
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="Margin" Value="2,2,2,2" />
+        <Setter Property="CornerRadius" Value="{StaticResource Zen.CornerRadius.Default}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenTabPage}">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            Margin="{TemplateBinding Margin}"
+                            SnapsToDevicePixels="True">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Path x:Name="tabIcon"
+                                  Data="{TemplateBinding Icon}"
+                                  Fill="{TemplateBinding Foreground}"
+                                  Stretch="Uniform"
+                                  Width="12"
+                                  Height="12"
+                                  Margin="0,0,6,0"
+                                  VerticalAlignment="Center" />
+
+                            <ContentPresenter x:Name="contentPresenter"
+                                              ContentSource="Header"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              RecognizesAccessKey="True" />
+
+                            <Border x:Name="badgeBorder"
+                                    Background="{StaticResource Zen.Brush.Background.SurfaceHover}"
+                                    BorderBrush="{StaticResource Zen.Brush.Border.Subtle}"
+                                    BorderThickness="1"
+                                    CornerRadius="2"
+                                    Padding="4,0"
+                                    Margin="6,0,0,0"
+                                    Height="16"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding BadgeText}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           FontSize="{StaticResource Zen.Font.Size.Micro}"
+                                           FontWeight="Medium"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" />
+                            </Border>
+
+                            <Button x:Name="closeButton"
+                                    Style="{StaticResource Zen.Style.TabPage.CloseButton}"
+                                    Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=InternalCloseCommand}"
+                                    Visibility="Collapsed"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Icon" Value="{x:Null}">
+                            <Setter TargetName="tabIcon" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="BadgeText" Value="{x:Null}">
+                            <Setter TargetName="badgeBorder" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="BadgeText" Value="">
+                            <Setter TargetName="badgeBorder" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsClosable" Value="True">
+                            <Setter TargetName="closeButton" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Primary.Muted}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Zen.Brush.Primary}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.VibrantCyan}" />
+                            <Setter Property="FontWeight" Value="{StaticResource Zen.Font.Weight.Medium}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Card TabPage Style -->
+    <Style x:Key="Zen.Style.TabPage.Card" TargetType="{x:Type controls:ZenTabPage}" BasedOn="{StaticResource Zen.Style.TabPage}">
+        <Setter Property="BorderThickness" Value="1,1,1,0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Margin" Value="0,0,2,-1" />
+        <Setter Property="CornerRadius" Value="2,2,0,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenTabPage}">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            Margin="{TemplateBinding Margin}"
+                            SnapsToDevicePixels="True">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Path x:Name="tabIcon"
+                                  Data="{TemplateBinding Icon}"
+                                  Fill="{TemplateBinding Foreground}"
+                                  Stretch="Uniform"
+                                  Width="12"
+                                  Height="12"
+                                  Margin="0,0,6,0"
+                                  VerticalAlignment="Center" />
+
+                            <ContentPresenter x:Name="contentPresenter"
+                                              ContentSource="Header"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              RecognizesAccessKey="True" />
+
+                            <Border x:Name="badgeBorder"
+                                    Background="{StaticResource Zen.Brush.Background.SurfaceHover}"
+                                    BorderBrush="{StaticResource Zen.Brush.Border.Subtle}"
+                                    BorderThickness="1"
+                                    CornerRadius="2"
+                                    Padding="4,0"
+                                    Margin="6,0,0,0"
+                                    Height="16"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="{TemplateBinding BadgeText}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           FontSize="{StaticResource Zen.Font.Size.Micro}"
+                                           FontWeight="Medium"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" />
+                            </Border>
+
+                            <Button x:Name="closeButton"
+                                    Style="{StaticResource Zen.Style.TabPage.CloseButton}"
+                                    Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=InternalCloseCommand}"
+                                    Visibility="Collapsed"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Icon" Value="{x:Null}">
+                            <Setter TargetName="tabIcon" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="BadgeText" Value="{x:Null}">
+                            <Setter TargetName="badgeBorder" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="BadgeText" Value="">
+                            <Setter TargetName="badgeBorder" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsClosable" Value="True">
+                            <Setter TargetName="closeButton" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceHover}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Zen.Brush.Background.Surface}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Default}" />
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Primary}" />
+                            <Setter Property="FontWeight" Value="{StaticResource Zen.Font.Weight.Medium}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource Zen.Brush.Foreground.Disabled}" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type controls:ZenTabPage}" BasedOn="{StaticResource Zen.Style.TabPage}" />
+    <Style TargetType="{x:Type controls:ZenTabItem}" BasedOn="{StaticResource Zen.Style.TabPage}" />
+
+    <!-- ================================================================= -->
+    <!-- ZEN TAB CONTROL STYLES                                            -->
+    <!-- ================================================================= -->
+
+    <!-- Default ZenTabControl Style -->
+    <Style x:Key="Zen.Style.ZenTabControl" TargetType="{x:Type controls:ZenTabControl}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Subtle}" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="Padding" Value="0,8,0,0" />
+        <Setter Property="HeaderPadding" Value="2,0,2,0" />
+        <Setter Property="CornerRadius" Value="{StaticResource Zen.CornerRadius.Default}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:ZenTabControl}">
+                    <Grid KeyboardNavigation.TabNavigation="Local">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Tab Header Strip -->
+                        <Border x:Name="headerBorder"
+                                Grid.Row="0"
+                                Background="{StaticResource Zen.Brush.Background.Canvas}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0,0,0,1"
+                                Padding="{TemplateBinding HeaderPadding}"
+                                SnapsToDevicePixels="True">
+                            <DockPanel LastChildFill="True">
+                                <!-- Optional Add Tab Button -->
+                                <Button x:Name="addTabButton"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource Zen.Style.TabControl.AddButton}"
+                                        Command="{TemplateBinding AddTabCommand}"
+                                        ToolTip="{TemplateBinding AddTabToolTip}"
+                                        Visibility="Collapsed" />
+
+                                <!-- Tab Items Panel -->
+                                <TabPanel x:Name="headerPanel"
+                                          IsItemsHost="True"
+                                          KeyboardNavigation.TabIndex="1"
+                                          Panel.ZIndex="1" />
+                            </DockPanel>
+                        </Border>
+
+                        <!-- Content Area -->
+                        <Border x:Name="contentBorder"
+                                Grid.Row="1"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter x:Name="PART_SelectedContentHost"
+                                              ContentSource="SelectedContent"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!-- Show Add Button -->
+                        <Trigger Property="ShowAddButton" Value="True">
+                            <Setter TargetName="addTabButton" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <!-- Custom HeaderBackground if provided -->
+                        <Trigger Property="HeaderBackground" Value="{x:Null}">
+                            <Setter TargetName="headerBorder" Property="Background" Value="{StaticResource Zen.Brush.Background.Canvas}" />
+                        </Trigger>
+
+                        <!-- Pill Tab Style Trigger -->
+                        <Trigger Property="TabStyle" Value="Pill">
+                            <Setter TargetName="headerBorder" Property="Background" Value="{StaticResource Zen.Brush.Background.Canvas}" />
+                            <Setter TargetName="headerBorder" Property="CornerRadius" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CornerRadius}" />
+                            <Setter TargetName="headerBorder" Property="BorderThickness" Value="1" />
+                            <Setter TargetName="headerBorder" Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Subtle}" />
+                            <Setter TargetName="headerBorder" Property="Padding" Value="2" />
+                            <Setter Property="ItemContainerStyle" Value="{StaticResource Zen.Style.TabPage.Pill}" />
+                        </Trigger>
+
+                        <!-- Segmented Tab Style Trigger -->
+                        <Trigger Property="TabStyle" Value="Segmented">
+                            <Setter TargetName="headerBorder" Property="Background" Value="{StaticResource Zen.Brush.Background.SurfaceAlt}" />
+                            <Setter TargetName="headerBorder" Property="CornerRadius" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CornerRadius}" />
+                            <Setter TargetName="headerBorder" Property="BorderThickness" Value="1" />
+                            <Setter TargetName="headerBorder" Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Subtle}" />
+                            <Setter TargetName="headerBorder" Property="Padding" Value="2" />
+                            <Setter Property="ItemContainerStyle" Value="{StaticResource Zen.Style.TabPage.Pill}" />
+                        </Trigger>
+
+                        <!-- Card Tab Style Trigger -->
+                        <Trigger Property="TabStyle" Value="Card">
+                            <Setter TargetName="headerBorder" Property="Background" Value="Transparent" />
+                            <Setter TargetName="headerBorder" Property="BorderThickness" Value="0,0,0,1" />
+                            <Setter TargetName="headerBorder" Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Default}" />
+                            <Setter TargetName="contentBorder" Property="Background" Value="{StaticResource Zen.Brush.Background.Surface}" />
+                            <Setter TargetName="contentBorder" Property="BorderThickness" Value="1,0,1,1" />
+                            <Setter TargetName="contentBorder" Property="BorderBrush" Value="{StaticResource Zen.Brush.Border.Default}" />
+                            <Setter TargetName="contentBorder" Property="CornerRadius" Value="0,0,2,2" />
+                            <Setter Property="Padding" Value="12" />
+                            <Setter Property="ItemContainerStyle" Value="{StaticResource Zen.Style.TabPage.Card}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Pill TabControl Style -->
+    <Style x:Key="Zen.Style.TabControl.Pill" TargetType="{x:Type controls:ZenTabControl}" BasedOn="{StaticResource Zen.Style.ZenTabControl}">
+        <Setter Property="TabStyle" Value="Pill" />
+    </Style>
+
+    <!-- Card TabControl Style -->
+    <Style x:Key="Zen.Style.TabControl.Card" TargetType="{x:Type controls:ZenTabControl}" BasedOn="{StaticResource Zen.Style.ZenTabControl}">
+        <Setter Property="TabStyle" Value="Card" />
+    </Style>
+
+    <!-- Segmented TabControl Style -->
+    <Style x:Key="Zen.Style.TabControl.Segmented" TargetType="{x:Type controls:ZenTabControl}" BasedOn="{StaticResource Zen.Style.ZenTabControl}">
+        <Setter Property="TabStyle" Value="Segmented" />
+    </Style>
+
+    <Style TargetType="{x:Type controls:ZenTabControl}" BasedOn="{StaticResource Zen.Style.ZenTabControl}" />
+
+</ResourceDictionary>

@@ -1,0 +1,152 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ================================================================= -->
+    <!-- ZEN UI PALETTE: Dark Blue / Slate Theme with Vibrant Accents      -->
+    <!-- ================================================================= -->
+
+    <!-- Base Dark Gray / Neutral Colors -->
+    <Color x:Key="Zen.Color.Background.Canvas">#0E0E10</Color>
+    <Color x:Key="Zen.Color.Background.App">#18181B</Color>
+    <Color x:Key="Zen.Color.Background.Sidebar">#131315</Color>
+    <Color x:Key="Zen.Color.Background.Header">#1C1C1F</Color>
+    <Color x:Key="Zen.Color.Background.Surface">#27272A</Color>
+    <Color x:Key="Zen.Color.Background.SurfaceAlt">#1F1F22</Color>
+    <Color x:Key="Zen.Color.Background.SurfaceHover">#323236</Color>
+    <Color x:Key="Zen.Color.Background.SurfacePressed">#3F3F46</Color>
+    <Color x:Key="Zen.Color.Background.Input">#121214</Color>
+    <Color x:Key="Zen.Color.Background.InputHover">#17171A</Color>
+    <Color x:Key="Zen.Color.Background.InputFocus">#1D1D21</Color>
+    <Color x:Key="Zen.Color.Background.Popup">#222225</Color>
+    <Color x:Key="Zen.Color.Background.Overlay">#8009090B</Color>
+
+    <!-- Primary Accent: Electric Cyan / Sky -->
+    <Color x:Key="Zen.Color.Primary">#0EA5E9</Color>
+    <Color x:Key="Zen.Color.Primary.Hover">#38BDF8</Color>
+    <Color x:Key="Zen.Color.Primary.Pressed">#0284C7</Color>
+    <Color x:Key="Zen.Color.Primary.Muted">#152F47</Color>
+    <Color x:Key="Zen.Color.Primary.Glow">#400EA5E9</Color>
+    <Color x:Key="Zen.Color.Primary.Foreground">#FFFFFF</Color>
+
+    <!-- Secondary Accent: Electric Violet / Purple -->
+    <Color x:Key="Zen.Color.Secondary">#8B5CF6</Color>
+    <Color x:Key="Zen.Color.Secondary.Hover">#A78BFA</Color>
+    <Color x:Key="Zen.Color.Secondary.Pressed">#7C3AED</Color>
+    <Color x:Key="Zen.Color.Secondary.Muted">#2B1B4A</Color>
+    <Color x:Key="Zen.Color.Secondary.Glow">#408B5CF6</Color>
+    <Color x:Key="Zen.Color.Secondary.Foreground">#FFFFFF</Color>
+
+    <!-- Vibrant Accents -->
+    <Color x:Key="Zen.Color.Success">#10B981</Color>
+    <Color x:Key="Zen.Color.Success.Hover">#34D399</Color>
+    <Color x:Key="Zen.Color.Success.Muted">#13332A</Color>
+
+    <Color x:Key="Zen.Color.Warning">#F59E0B</Color>
+    <Color x:Key="Zen.Color.Warning.Hover">#FBBF24</Color>
+    <Color x:Key="Zen.Color.Warning.Muted">#3D2E11</Color>
+
+    <Color x:Key="Zen.Color.Danger">#F43F5E</Color>
+    <Color x:Key="Zen.Color.Danger.Hover">#FB7185</Color>
+    <Color x:Key="Zen.Color.Danger.Muted">#3B1724</Color>
+
+    <Color x:Key="Zen.Color.Info">#06B6D4</Color>
+    <Color x:Key="Zen.Color.Info.Hover">#22D3EE</Color>
+    <Color x:Key="Zen.Color.Info.Muted">#11313D</Color>
+
+    <!-- Borders -->
+    <Color x:Key="Zen.Color.Border.Default">#3A3A40</Color>
+    <Color x:Key="Zen.Color.Border.Subtle">#27272A</Color>
+    <Color x:Key="Zen.Color.Border.Hover">#52525B</Color>
+    <Color x:Key="Zen.Color.Border.Focus">#38BDF8</Color>
+    <Color x:Key="Zen.Color.Border.SecondaryFocus">#A78BFA</Color>
+    <Color x:Key="Zen.Color.Border.Divider">#2C2C30</Color>
+
+    <!-- Neutral Foregrounds -->
+    <Color x:Key="Zen.Color.Foreground.Primary">#E4E4E7</Color>
+    <Color x:Key="Zen.Color.Foreground.Secondary">#A1A1AA</Color>
+    <Color x:Key="Zen.Color.Foreground.Muted">#71717A</Color>
+    <Color x:Key="Zen.Color.Foreground.Disabled">#52525B</Color>
+    <Color x:Key="Zen.Color.Foreground.Inverse">#0C0C0E</Color>
+
+    <Color x:Key="Zen.Color.Foreground.VibrantCyan">#38BDF8</Color>
+    <Color x:Key="Zen.Color.Foreground.VibrantGreen">#4ADE80</Color>
+    <Color x:Key="Zen.Color.Foreground.VibrantPurple">#C084FC</Color>
+    <Color x:Key="Zen.Color.Foreground.VibrantYellow">#FDE047</Color>
+    <Color x:Key="Zen.Color.Foreground.VibrantRose">#FB7185</Color>
+    <Color x:Key="Zen.Color.Foreground.VibrantOrange">#FB923C</Color>
+
+    <!-- ================================================================= -->
+    <!-- SOLID COLOR BRUSHES                                               -->
+    <!-- ================================================================= -->
+
+    <!-- Backgrounds -->
+    <SolidColorBrush x:Key="Zen.Brush.Background.Canvas" Color="{StaticResource Zen.Color.Background.Canvas}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.App" Color="{StaticResource Zen.Color.Background.App}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.Sidebar" Color="{StaticResource Zen.Color.Background.Sidebar}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.Header" Color="{StaticResource Zen.Color.Background.Header}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.Surface" Color="{StaticResource Zen.Color.Background.Surface}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.SurfaceAlt" Color="{StaticResource Zen.Color.Background.SurfaceAlt}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.SurfaceHover" Color="{StaticResource Zen.Color.Background.SurfaceHover}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.SurfacePressed" Color="{StaticResource Zen.Color.Background.SurfacePressed}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.Input" Color="{StaticResource Zen.Color.Background.Input}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.InputHover" Color="{StaticResource Zen.Color.Background.InputHover}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.InputFocus" Color="{StaticResource Zen.Color.Background.InputFocus}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.Popup" Color="{StaticResource Zen.Color.Background.Popup}" />
+    <SolidColorBrush x:Key="Zen.Brush.Background.Overlay" Color="{StaticResource Zen.Color.Background.Overlay}" />
+
+    <!-- Primary -->
+    <SolidColorBrush x:Key="Zen.Brush.Primary" Color="{StaticResource Zen.Color.Primary}" />
+    <SolidColorBrush x:Key="Zen.Brush.Primary.Hover" Color="{StaticResource Zen.Color.Primary.Hover}" />
+    <SolidColorBrush x:Key="Zen.Brush.Primary.Pressed" Color="{StaticResource Zen.Color.Primary.Pressed}" />
+    <SolidColorBrush x:Key="Zen.Brush.Primary.Muted" Color="{StaticResource Zen.Color.Primary.Muted}" />
+    <SolidColorBrush x:Key="Zen.Brush.Primary.Glow" Color="{StaticResource Zen.Color.Primary.Glow}" />
+    <SolidColorBrush x:Key="Zen.Brush.Primary.Foreground" Color="{StaticResource Zen.Color.Primary.Foreground}" />
+
+    <!-- Secondary -->
+    <SolidColorBrush x:Key="Zen.Brush.Secondary" Color="{StaticResource Zen.Color.Secondary}" />
+    <SolidColorBrush x:Key="Zen.Brush.Secondary.Hover" Color="{StaticResource Zen.Color.Secondary.Hover}" />
+    <SolidColorBrush x:Key="Zen.Brush.Secondary.Pressed" Color="{StaticResource Zen.Color.Secondary.Pressed}" />
+    <SolidColorBrush x:Key="Zen.Brush.Secondary.Muted" Color="{StaticResource Zen.Color.Secondary.Muted}" />
+    <SolidColorBrush x:Key="Zen.Brush.Secondary.Glow" Color="{StaticResource Zen.Color.Secondary.Glow}" />
+    <SolidColorBrush x:Key="Zen.Brush.Secondary.Foreground" Color="{StaticResource Zen.Color.Secondary.Foreground}" />
+
+    <!-- Status Accents -->
+    <SolidColorBrush x:Key="Zen.Brush.Success" Color="{StaticResource Zen.Color.Success}" />
+    <SolidColorBrush x:Key="Zen.Brush.Success.Hover" Color="{StaticResource Zen.Color.Success.Hover}" />
+    <SolidColorBrush x:Key="Zen.Brush.Success.Muted" Color="{StaticResource Zen.Color.Success.Muted}" />
+
+    <SolidColorBrush x:Key="Zen.Brush.Warning" Color="{StaticResource Zen.Color.Warning}" />
+    <SolidColorBrush x:Key="Zen.Brush.Warning.Hover" Color="{StaticResource Zen.Color.Warning.Hover}" />
+    <SolidColorBrush x:Key="Zen.Brush.Warning.Muted" Color="{StaticResource Zen.Color.Warning.Muted}" />
+
+    <SolidColorBrush x:Key="Zen.Brush.Danger" Color="{StaticResource Zen.Color.Danger}" />
+    <SolidColorBrush x:Key="Zen.Brush.Danger.Hover" Color="{StaticResource Zen.Color.Danger.Hover}" />
+    <SolidColorBrush x:Key="Zen.Brush.Danger.Muted" Color="{StaticResource Zen.Color.Danger.Muted}" />
+
+    <SolidColorBrush x:Key="Zen.Brush.Info" Color="{StaticResource Zen.Color.Info}" />
+    <SolidColorBrush x:Key="Zen.Brush.Info.Hover" Color="{StaticResource Zen.Color.Info.Hover}" />
+    <SolidColorBrush x:Key="Zen.Brush.Info.Muted" Color="{StaticResource Zen.Color.Info.Muted}" />
+
+    <!-- Borders -->
+    <SolidColorBrush x:Key="Zen.Brush.Border.Default" Color="{StaticResource Zen.Color.Border.Default}" />
+    <SolidColorBrush x:Key="Zen.Brush.Border.Subtle" Color="{StaticResource Zen.Color.Border.Subtle}" />
+    <SolidColorBrush x:Key="Zen.Brush.Border.Hover" Color="{StaticResource Zen.Color.Border.Hover}" />
+    <SolidColorBrush x:Key="Zen.Brush.Border.Focus" Color="{StaticResource Zen.Color.Border.Focus}" />
+    <SolidColorBrush x:Key="Zen.Brush.Border.SecondaryFocus" Color="{StaticResource Zen.Color.Border.SecondaryFocus}" />
+    <SolidColorBrush x:Key="Zen.Brush.Border.Divider" Color="{StaticResource Zen.Color.Border.Divider}" />
+
+    <!-- Foregrounds -->
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.Primary" Color="{StaticResource Zen.Color.Foreground.Primary}" />
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.Secondary" Color="{StaticResource Zen.Color.Foreground.Secondary}" />
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.Muted" Color="{StaticResource Zen.Color.Foreground.Muted}" />
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.Disabled" Color="{StaticResource Zen.Color.Foreground.Disabled}" />
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.Inverse" Color="{StaticResource Zen.Color.Foreground.Inverse}" />
+
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.VibrantCyan" Color="{StaticResource Zen.Color.Foreground.VibrantCyan}" />
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.VibrantGreen" Color="{StaticResource Zen.Color.Foreground.VibrantGreen}" />
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.VibrantPurple" Color="{StaticResource Zen.Color.Foreground.VibrantPurple}" />
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.VibrantYellow" Color="{StaticResource Zen.Color.Foreground.VibrantYellow}" />
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.VibrantRose" Color="{StaticResource Zen.Color.Foreground.VibrantRose}" />
+    <SolidColorBrush x:Key="Zen.Brush.Foreground.VibrantOrange" Color="{StaticResource Zen.Color.Foreground.VibrantOrange}" />
+
+</ResourceDictionary>

@@ -1,0 +1,66 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!-- ================================================================= -->
+    <!-- ZEN UI DIMENSIONS & METRICS (High Density / Minimal Margins)      -->
+    <!-- ================================================================= -->
+
+    <!-- Corner Radiuses (Minimal: 0-3px) -->
+    <CornerRadius x:Key="Zen.CornerRadius.None">0</CornerRadius>
+    <CornerRadius x:Key="Zen.CornerRadius.Sharp">0</CornerRadius>
+    <CornerRadius x:Key="Zen.CornerRadius.Minimal">1</CornerRadius>
+    <CornerRadius x:Key="Zen.CornerRadius.Subtle">3</CornerRadius>
+    <CornerRadius x:Key="Zen.CornerRadius.Default">2</CornerRadius>
+    <CornerRadius x:Key="Zen.CornerRadius.Round">999</CornerRadius>
+
+    <!-- Standard Element Heights -->
+    <sys:Double x:Key="Zen.Height.Control.Dense">24</sys:Double>
+    <sys:Double x:Key="Zen.Height.Control.Default">28</sys:Double>
+    <sys:Double x:Key="Zen.Height.Control.Comfortable">32</sys:Double>
+    <sys:Double x:Key="Zen.Height.Control.Large">36</sys:Double>
+    <sys:Double x:Key="Zen.Height.Header">36</sys:Double>
+    <sys:Double x:Key="Zen.Height.MenuItem">26</sys:Double>
+    <sys:Double x:Key="Zen.Height.TableRow">26</sys:Double>
+    <sys:Double x:Key="Zen.Height.TabItem">28</sys:Double>
+
+    <!-- Sidebar / Nav Widths -->
+    <sys:Double x:Key="Zen.Width.Sidebar.Expanded">220</sys:Double>
+    <sys:Double x:Key="Zen.Width.Sidebar.Compact">48</sys:Double>
+
+    <!-- High-Density Paddings (Minimal space waste) -->
+    <Thickness x:Key="Zen.Padding.None">0</Thickness>
+    <Thickness x:Key="Zen.Padding.Dense">4,2</Thickness>
+    <Thickness x:Key="Zen.Padding.Default">6,3</Thickness>
+    <Thickness x:Key="Zen.Padding.Comfortable">8,4</Thickness>
+    <Thickness x:Key="Zen.Padding.Input">6,3</Thickness>
+    <Thickness x:Key="Zen.Padding.Button">8,3</Thickness>
+    <Thickness x:Key="Zen.Padding.Button.Dense">4,2</Thickness>
+    <Thickness x:Key="Zen.Padding.Card">8,8</Thickness>
+    <Thickness x:Key="Zen.Padding.Card.Dense">6,6</Thickness>
+    <Thickness x:Key="Zen.Padding.MenuItem">8,3</Thickness>
+    <Thickness x:Key="Zen.Padding.TabItem">10,4</Thickness>
+    <Thickness x:Key="Zen.Padding.TableCell">6,3</Thickness>
+    <Thickness x:Key="Zen.Padding.Header">8,4</Thickness>
+
+    <!-- High-Density Margins -->
+    <Thickness x:Key="Zen.Margin.None">0</Thickness>
+    <Thickness x:Key="Zen.Margin.Dense">2</Thickness>
+    <Thickness x:Key="Zen.Margin.Default">4</Thickness>
+    <Thickness x:Key="Zen.Margin.Section">6</Thickness>
+
+    <!-- Border Thicknesses -->
+    <Thickness x:Key="Zen.Thickness.None">0</Thickness>
+    <Thickness x:Key="Zen.Thickness.Border">1</Thickness>
+    <Thickness x:Key="Zen.Thickness.FocusBorder">1.5</Thickness>
+    <Thickness x:Key="Zen.Thickness.BottomIndicator">0,0,0,2</Thickness>
+    <Thickness x:Key="Zen.Thickness.LeftIndicator">2,0,0,0</Thickness>
+    <Thickness x:Key="Zen.Thickness.RightIndicator">0,0,2,0</Thickness>
+
+    <!-- Icon Sizes -->
+    <sys:Double x:Key="Zen.Icon.Size.Small">12</sys:Double>
+    <sys:Double x:Key="Zen.Icon.Size.Default">14</sys:Double>
+    <sys:Double x:Key="Zen.Icon.Size.Medium">16</sys:Double>
+    <sys:Double x:Key="Zen.Icon.Size.Large">20</sys:Double>
+
+</ResourceDictionary>

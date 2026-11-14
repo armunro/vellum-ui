@@ -1,1 +1,111 @@
-# vellum-ui
+# ZenUI — High-Density Dark Slate WPF UI Framework
+
+ZenUI is a modern, high-density WPF UI framework designed for technical applications, developer tools, telemetry dashboards, and data-intensive interfaces.
+
+---
+
+## Key Design Principles & Specifications
+
+- **Minimal Margins & Padding**: Maximizes usable screen real estate (up to 40% higher data density).
+- **Minimal / Zero Border Radiuses**: Clean, sharp 0–1px engineering aesthetic.
+- **Dark Blue / Slate Palette**: Deep slate background `#0F172A` with layered `#1E293B` surfaces and `#090D16` canvas.
+- **Primary & Secondary Colors**:
+  - **Primary**: Electric Cyan / Sky (`#0EA5E9` / `#38BDF8`)
+  - **Secondary**: Electric Violet (`#8B5CF6` / `#A78BFA`)
+  - **Status Accents**: Success Emerald (`#10B981`), Warning Amber (`#F59E0B`), Danger Rose (`#F43F5E`), Info Cyan (`#06B6D4`).
+- **Bright & Vibrant Foregrounds**: Ultra-crisp `#F8FAFC` primary typography paired with high-contrast vibrant text helpers (`#38BDF8`, `#4ADE80`, `#C084FC`, `#FDE047`, `#FB7185`).
+- **Top Menus & Left Menus**: Dedicated controls for both horizontal header navigation (`ZenTopMenu`, `ZenTopMenuItem`) and collapsible vertical navigation drawers (`ZenLeftNav`, `ZenNavItem`, `ZenNavSection`).
+- **Demonstration Showcase Application**: Built-in interactive showcase app (`ZenUI.Demo`) demonstrating all controls, tables, inputs, navigation, containers, and theme resources.
+
+---
+
+## Quick Start Guide
+
+### 1. Reference ZenUI in your WPF Project
+
+Add a reference to `ZenUI.csproj` in your project or package dependencies.
+
+### 2. Include Theme Resources in `App.xaml`
+
+```xml
+<Application x:Class="MyProject.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ZenUI;component/Themes/ZenTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
+```
+
+### 3. Use ZenWindow with Custom TitleBar and Top Navigation
+
+```xml
+<controls:ZenWindow x:Class="MyProject.MainWindow"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:ZenUI.Controls;assembly=ZenUI"
+                    Title="My High Density App"
+                    WindowIcon="{StaticResource Zen.Icon.Geometry.Layers}"
+                    Width="1100" Height="700">
+    <controls:ZenWindow.TitleBarContent>
+        <controls:ZenTopMenu>
+            <controls:ZenTopMenuItem Header="File">
+                <MenuItem Header="New" />
+                <MenuItem Header="Open" />
+                <MenuItem Header="Save" />
+            </controls:ZenTopMenuItem>
+            <controls:ZenTopMenuItem Header="View" />
+            <controls:ZenTopMenuItem Header="Tools" />
+        </controls:ZenTopMenu>
+    </controls:ZenWindow.TitleBarContent>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Navigation Sidebar -->
+        <controls:ZenLeftNav Grid.Column="0">
+            <controls:ZenNavSection Header="WORKSPACE" />
+            <controls:ZenNavItem Header="Dashboard" Icon="{StaticResource Zen.Icon.Geometry.Dashboard}" IsSelected="True" />
+            <controls:ZenNavItem Header="Data Tables" Icon="{StaticResource Zen.Icon.Geometry.Table}" />
+            <controls:ZenNavItem Header="Settings" Icon="{StaticResource Zen.Icon.Geometry.Settings}" />
+        </controls:ZenLeftNav>
+
+        <!-- Main Content -->
+        <Border Grid.Column="1" Padding="8">
+            <controls:ZenCard Header="OVERVIEW" ShowTopAccent="True" HighlightBrush="{StaticResource Zen.Brush.Primary}">
+                <Button Content="Primary Action" Style="{StaticResource Zen.Style.Button.Primary}" />
+            </controls:ZenCard>
+        </Border>
+    </Grid>
+</controls:ZenWindow>
+```
+
+---
+
+## Included Controls & Styles
+
+| Category | Elements |
+|---|---|
+| **Window & Layout** | `ZenWindow`, `ZenCard`, `GroupBox`, `Border` |
+| **Navigation** | `ZenTopMenu`, `ZenTopMenuItem`, `ZenLeftNav`, `ZenNavItem`, `ZenNavSection`, `Menu`, `MenuItem`, `TabControl`, `TabItem` |
+| **Buttons** | `Zen.Style.Button.Primary`, `Zen.Style.Button.Secondary`, `Zen.Style.Button.Surface`, `Zen.Style.Button.Outline`, `Zen.Style.Button.Ghost`, `Zen.Style.Button.Success`, `Zen.Style.Button.Danger`, `Zen.Style.Button.Icon` |
+| **Form Inputs** | `TextBox`, `PasswordBox`, `ZenSearchBox`, `ComboBox`, `ComboBoxItem` |
+| **Toggles & Selection** | `CheckBox`, `RadioButton`, `ZenToggleSwitch`, `Slider` |
+| **Data & Tables** | `DataGrid`, `DataGridColumnHeader`, `DataGridCell`, `DataGridRow`, `ListView`, `ListBox`, `TreeView`, `ProgressBar` |
+| **Indicators & Badges** | `ZenBadge` (Primary, Secondary, Success, Warning, Danger, Info, Muted, Outline), `ZenStatusIndicator`, `ToolTip`, `ContextMenu`, `Expander` |
+
+---
+
+## Running the Demonstration App
+
+```powershell
+dotnet run --project src/ZenUI.Demo/ZenUI.Demo.csproj
+```

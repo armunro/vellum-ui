@@ -1,0 +1,160 @@
+﻿<UserControl x:Class="VellumUI.Demo.Views.NavigationDemoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:VellumUI.Controls;assembly=VellumUI">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="8,4">
+        <StackPanel>
+            <TextBlock Text="Navigation &amp; Menus" Style="{StaticResource Zen.Style.TextBlock.Heading}" />
+            <TextBlock Text="Top menu bars, left navigation drawers, and high-density tab controls for fast navigation"
+                       Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,2,0,8" />
+
+            <!-- Section 1: Top Menu Bar Showcase -->
+            <controls:ZenCard Header="TOP MENU NAVIGATION (ZenTopMenu)" Subtitle="Horizontal navigation with brand, dropdowns &amp; actions" ShowTopAccent="True" HighlightBrush="{StaticResource Zen.Brush.Primary}" Margin="0,0,0,8">
+                <StackPanel>
+                    <!-- Embedded TopMenu Demo -->
+                    <Border Background="{StaticResource Zen.Brush.Background.Canvas}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1" Margin="0,0,0,8">
+                        <controls:ZenTopMenu>
+                            <controls:ZenTopMenu.BrandContent>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Layers}" Width="16" Height="16" Fill="{StaticResource Zen.Brush.Foreground.VibrantCyan}" Stretch="Uniform" Margin="0,0,6,0" />
+                                    <TextBlock Text="ZEN STUDIO" FontWeight="Bold" FontSize="{StaticResource Zen.Font.Size.Body}" Foreground="{StaticResource Zen.Brush.Foreground.Primary}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </controls:ZenTopMenu.BrandContent>
+
+                            <!-- Top Menu Items -->
+                            <controls:ZenTopMenuItem Header="Dashboard" IconGeometry="{StaticResource Zen.Icon.Geometry.Dashboard}" IsActive="True" />
+                            <controls:ZenTopMenuItem Header="Projects" IconGeometry="{StaticResource Zen.Icon.Geometry.Folder}">
+                                <MenuItem Header="New Project" InputGestureText="Ctrl+N" />
+                                <MenuItem Header="Open Workspace..." InputGestureText="Ctrl+O" />
+                                <Separator Style="{StaticResource {x:Static MenuItem.SeparatorStyleKey}}" />
+                                <MenuItem Header="Export Solution" />
+                                <MenuItem Header="Project Settings" />
+                            </controls:ZenTopMenuItem>
+                            <controls:ZenTopMenuItem Header="Analytics" IconGeometry="{StaticResource Zen.Icon.Geometry.Table}">
+                                <MenuItem Header="Live Performance" />
+                                <MenuItem Header="Network Telemetry" />
+                                <MenuItem Header="Resource Allocation" />
+                            </controls:ZenTopMenuItem>
+                            <controls:ZenTopMenuItem Header="Tools" IconGeometry="{StaticResource Zen.Icon.Geometry.Code}">
+                                <MenuItem Header="Package Manager" />
+                                <MenuItem Header="Terminal Console" InputGestureText="Ctrl+`" />
+                                <MenuItem Header="Color Theme Inspector" />
+                            </controls:ZenTopMenuItem>
+
+                            <!-- Right Actions Area -->
+                            <controls:ZenTopMenu.ActionsContent>
+                                <controls:ZenSearchBox Placeholder="Quick find..." Width="150" Height="24" />
+                            </controls:ZenTopMenu.ActionsContent>
+
+                            <controls:ZenTopMenu.RightContent>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <controls:ZenBadge Content="v1.0" Variant="Primary" Margin="0,0,6,0" />
+                                    <Button Style="{StaticResource Zen.Style.Button.Icon}" Width="24" Height="24" ToolTip="Notifications">
+                                        <Path Data="{StaticResource Zen.Icon.Geometry.Bell}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" />
+                                    </Button>
+                                    <Button Style="{StaticResource Zen.Style.Button.Icon}" Width="24" Height="24" ToolTip="User Settings" Margin="4,0,0,0">
+                                        <Path Data="{StaticResource Zen.Icon.Geometry.User}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.VibrantCyan}" Stretch="Uniform" />
+                                    </Button>
+                                </StackPanel>
+                            </controls:ZenTopMenu.RightContent>
+                        </controls:ZenTopMenu>
+                    </Border>
+                    <TextBlock Text="Top menus include integrated brand logo, flyout submenus with keyboard shortcuts, search actions, and badge indicators." Style="{StaticResource Zen.Style.TextBlock.Muted}" />
+                </StackPanel>
+            </controls:ZenCard>
+
+            <!-- Section 2: Left Nav & TabControl in a 2-column layout -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.4*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Navigation Component Showcase -->
+                <controls:ZenCard Grid.Column="0" Header="LEFT NAVIGATION DRAWER (ZenLeftNav)" Subtitle="Vertical sidebar with sections &amp; compact mode" Margin="0,0,4,0">
+                    <StackPanel>
+                        <Border Background="{StaticResource Zen.Brush.Background.Canvas}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1" MaxHeight="240">
+                            <controls:ZenLeftNav Width="Auto">
+                                <controls:ZenLeftNav.Header>
+                                    <Border Background="{StaticResource Zen.Brush.Background.Header}" Padding="8,6" BorderBrush="{StaticResource Zen.Brush.Border.Subtle}" BorderThickness="0,0,0,1">
+                                        <TextBlock Text="NAVIGATION MENU" FontSize="{StaticResource Zen.Font.Size.Micro}" FontWeight="Bold" Foreground="{StaticResource Zen.Brush.Foreground.Muted}" />
+                                    </Border>
+                                </controls:ZenLeftNav.Header>
+
+                                <controls:ZenNavSection Header="CORE SUITE" Margin="0,6,0,4" />
+                                <controls:ZenNavItem Header="Infrastructure" Icon="{StaticResource Zen.Icon.Geometry.Dashboard}" IsSelected="True" Badge="Live" BadgeVariant="Success" />
+                                <controls:ZenNavItem Header="Workloads" Icon="{StaticResource Zen.Icon.Geometry.Controls}" Badge="8" BadgeVariant="Primary" />
+
+                                <controls:ZenNavSection Header="DATA &amp; CODE" />
+                                <controls:ZenNavItem Header="Storage" Icon="{StaticResource Zen.Icon.Geometry.Folder}" IsExpanded="True">
+                                    <controls:ZenNavItem Header="Databases" Icon="{StaticResource Zen.Icon.Geometry.Table}" />
+                                    <controls:ZenNavItem Header="File Blobs" Icon="{StaticResource Zen.Icon.Geometry.File}" />
+                                </controls:ZenNavItem>
+                                <controls:ZenNavItem Header="Configuration" Icon="{StaticResource Zen.Icon.Geometry.Settings}" />
+                            </controls:ZenLeftNav>
+                        </Border>
+                    </StackPanel>
+                </controls:ZenCard>
+
+                <!-- TabControl Showcase -->
+                <controls:ZenCard Grid.Column="1" Header="TAB PAGE CONTROL (ZenTabControl &amp; ZenTabPage)" Subtitle="Underline, Pill &amp; Card styles with icons, badges &amp; closable tabs" Margin="4,0,0,0">
+                    <StackPanel>
+                        <!-- Underline Style with Badges, Icons & Close Buttons -->
+                        <TextBlock Text="Underline Style (with icons, badges &amp; closable tabs):" Style="{StaticResource Zen.Style.TextBlock.Caption}" Margin="0,0,0,4" />
+                        <controls:ZenTabControl MinHeight="140" ShowAddButton="True" Margin="0,0,0,8">
+                            <controls:ZenTabPage Header="Compute" Icon="{StaticResource Zen.Icon.Geometry.Dashboard}" BadgeText="48/50">
+                                <StackPanel Margin="0,6,0,0">
+                                    <TextBlock Text="Primary compute cluster is active with 48/50 nodes online." Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,0,0,6" />
+                                    <UniformGrid Columns="2" Margin="0,0,0,6">
+                                        <Border Background="{StaticResource Zen.Brush.Background.SurfaceHover}" Padding="6,4" Margin="0,0,4,0">
+                                            <StackPanel>
+                                                <TextBlock Text="Egress Bandwidth" Style="{StaticResource Zen.Style.TextBlock.Caption}" />
+                                                <TextBlock Text="1.84 Gbps" Foreground="{StaticResource Zen.Brush.Foreground.VibrantCyan}" FontWeight="Bold" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Background="{StaticResource Zen.Brush.Background.SurfaceHover}" Padding="6,4" Margin="4,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="CPU Average" Style="{StaticResource Zen.Style.TextBlock.Caption}" />
+                                                <TextBlock Text="38.4%" Foreground="{StaticResource Zen.Brush.Foreground.VibrantPurple}" FontWeight="Bold" />
+                                            </StackPanel>
+                                        </Border>
+                                    </UniformGrid>
+                                    <Button Content="Configure Cluster" Style="{StaticResource Zen.Style.Button.Primary}" HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </controls:ZenTabPage>
+
+                            <controls:ZenTabPage Header="Storage" Icon="{StaticResource Zen.Icon.Geometry.Folder}" IsClosable="True">
+                                <StackPanel Margin="0,6,0,0">
+                                    <TextBlock Text="Persistent SSD volume allocation: 1.2 TB / 2.0 TB used." Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,0,0,6" />
+                                    <ProgressBar Value="60" Maximum="100" Margin="0,0,0,6" />
+                                    <Button Content="Expand Volume" Style="{StaticResource Zen.Style.Button.Secondary}" HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </controls:ZenTabPage>
+
+                            <controls:ZenTabPage Header="Security" Icon="{StaticResource Zen.Icon.Geometry.Check}" BadgeText="OK" IsClosable="True">
+                                <StackPanel Margin="0,6,0,0">
+                                    <TextBlock Text="All TLS 1.3 encryption keys valid. Zero vulnerability alerts." Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,0,0,6" />
+                                    <controls:ZenBadge Content="SECURITY PASSED" Variant="Success" HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </controls:ZenTabPage>
+                        </controls:ZenTabControl>
+
+                        <!-- Pill Tab Style Variant -->
+                        <TextBlock Text="Pill / Capsule Style (Zen.Style.TabControl.Pill):" Style="{StaticResource Zen.Style.TextBlock.Caption}" Margin="0,0,0,4" />
+                        <controls:ZenTabControl TabStyle="Pill" SelectedIndex="0">
+                            <controls:ZenTabPage Header="Live Telemetry" Icon="{StaticResource Zen.Icon.Geometry.Table}">
+                                <TextBlock Text="Stream active: 24,190 events/sec processed across 6 partitions." Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,4,0,0" />
+                            </controls:ZenTabPage>
+                            <controls:ZenTabPage Header="Log Traces" BadgeText="99+">
+                                <TextBlock Text="System journal: 0 critical errors, 3 warnings in the last 15 minutes." Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,4,0,0" />
+                            </controls:ZenTabPage>
+                            <controls:ZenTabPage Header="Node Mesh">
+                                <TextBlock Text="Consensus protocol synchronized with 0 ms jitter." Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,4,0,0" />
+                            </controls:ZenTabPage>
+                        </controls:ZenTabControl>
+                    </StackPanel>
+                </controls:ZenCard>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

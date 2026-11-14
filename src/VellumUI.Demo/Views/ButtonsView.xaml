@@ -1,0 +1,153 @@
+﻿<UserControl x:Class="VellumUI.Demo.Views.ButtonsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:VellumUI.Controls;assembly=VellumUI">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="8,4">
+        <StackPanel>
+            <TextBlock Text="Buttons &amp; Actions" Style="{StaticResource Zen.Style.TextBlock.Heading}" />
+            <TextBlock Text="Comprehensive button styles with primary/secondary vibrant accents and minimal padding"
+                       Style="{StaticResource Zen.Style.TextBlock.Secondary}" Margin="0,2,0,8" />
+
+            <!-- Row 1: Primary & Secondary Styles -->
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Primary Buttons -->
+                <controls:ZenCard Grid.Column="0" Header="PRIMARY ACCENT (CYAN)" Subtitle="Primary user action buttons" ShowTopAccent="True" HighlightBrush="{StaticResource Zen.Brush.Primary}" Margin="0,0,4,0">
+                    <StackPanel>
+                        <WrapPanel Margin="0,0,0,8">
+                            <Button Content="Primary Button" Style="{StaticResource Zen.Style.Button.Primary}" Margin="0,0,6,6" />
+                            <Button Style="{StaticResource Zen.Style.Button.Primary}" Margin="0,0,6,6">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Plus}" Width="10" Height="10" Fill="#FFFFFF" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="Create New" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button Content="Disabled Primary" IsEnabled="False" Style="{StaticResource Zen.Style.Button.Primary}" Margin="0,0,6,6" />
+                        </WrapPanel>
+                        <TextBlock Text="Primary buttons draw maximum focus with subtle 2px corner radius and glowing hover states." Style="{StaticResource Zen.Style.TextBlock.Muted}" />
+                    </StackPanel>
+                </controls:ZenCard>
+
+                <!-- Secondary Buttons -->
+                <controls:ZenCard Grid.Column="1" Header="SECONDARY ACCENT (VIOLET)" Subtitle="Secondary actions and badges" ShowTopAccent="True" HighlightBrush="{StaticResource Zen.Brush.Secondary}" Margin="4,0,0,0">
+                    <StackPanel>
+                        <WrapPanel Margin="0,0,0,8">
+                            <Button Content="Secondary Action" Style="{StaticResource Zen.Style.Button.Secondary}" Margin="0,0,6,6" />
+                            <Button Style="{StaticResource Zen.Style.Button.Secondary}" Margin="0,0,6,6">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Sparkles}" Width="10" Height="10" Fill="#FFFFFF" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="AI Enhance" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button Content="Disabled Secondary" IsEnabled="False" Style="{StaticResource Zen.Style.Button.Secondary}" Margin="0,0,6,6" />
+                        </WrapPanel>
+                        <TextBlock Text="Secondary buttons use the vibrant violet accent for alternative workflows and high-level operations." Style="{StaticResource Zen.Style.TextBlock.Muted}" />
+                    </StackPanel>
+                </controls:ZenCard>
+            </Grid>
+
+            <!-- Row 2: Surface, Outline & Ghost -->
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Surface Buttons -->
+                <controls:ZenCard Grid.Column="0" Header="SURFACE BUTTONS" Subtitle="Standard dark slate" Margin="0,0,4,0">
+                    <WrapPanel>
+                        <Button Content="Standard Surface" Style="{StaticResource Zen.Style.Button.Surface}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource Zen.Style.Button.Surface}" Margin="0,0,6,6">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource Zen.Icon.Geometry.Copy}" Width="10" Height="10" Fill="{StaticResource Zen.Brush.Foreground.VibrantCyan}" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Duplicate" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
+                </controls:ZenCard>
+
+                <!-- Outline Buttons -->
+                <controls:ZenCard Grid.Column="1" Header="OUTLINE BUTTONS" Subtitle="Subtle bordered style" Margin="4,0,4,0">
+                    <WrapPanel>
+                        <Button Content="Outline Button" Style="{StaticResource Zen.Style.Button.Outline}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource Zen.Style.Button.Outline}" Margin="0,0,6,6">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource Zen.Icon.Geometry.Download}" Width="10" Height="10" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Export Data" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
+                </controls:ZenCard>
+
+                <!-- Ghost Buttons -->
+                <controls:ZenCard Grid.Column="2" Header="GHOST / FLAT" Subtitle="Frameless navigation links" Margin="4,0,0,0">
+                    <WrapPanel>
+                        <Button Content="Ghost Button" Style="{StaticResource Zen.Style.Button.Ghost}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource Zen.Style.Button.Ghost}" Margin="0,0,6,6">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource Zen.Icon.Geometry.ExternalLink}" Width="10" Height="10" Fill="{StaticResource Zen.Brush.Foreground.Muted}" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Documentation" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
+                </controls:ZenCard>
+            </Grid>
+
+            <!-- Row 3: Status Buttons & Icon Toolbars -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Status Buttons -->
+                <controls:ZenCard Grid.Column="0" Header="STATUS ACCENT BUTTONS" Subtitle="Success &amp; Danger actions" Margin="0,0,4,0">
+                    <WrapPanel>
+                        <Button Content="Confirm / Save" Style="{StaticResource Zen.Style.Button.Success}" Margin="0,0,6,6" />
+                        <Button Content="Delete / Terminate" Style="{StaticResource Zen.Style.Button.Danger}" Margin="0,0,6,6" />
+                        <Button Style="{StaticResource Zen.Style.Button.Danger}" Margin="0,0,6,6">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource Zen.Icon.Geometry.Trash}" Width="10" Height="10" Fill="#FFFFFF" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Purge Cache" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
+                </controls:ZenCard>
+
+                <!-- Icon Toolbar Buttons -->
+                <controls:ZenCard Grid.Column="1" Header="ICON TOOLBAR BUTTONS" Subtitle="Compact 24-28px square buttons" Margin="4,0,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="{StaticResource Zen.Brush.Background.Input}" BorderBrush="{StaticResource Zen.Brush.Border.Default}" BorderThickness="1" CornerRadius="2" Padding="2">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource Zen.Style.Button.Icon}" ToolTip="Search" Margin="1,0">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Search}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" />
+                                </Button>
+                                <Button Style="{StaticResource Zen.Style.Button.Icon}" ToolTip="Filter" Margin="1,0">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Filter}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" />
+                                </Button>
+                                <Button Style="{StaticResource Zen.Style.Button.Icon}" ToolTip="Refresh" Margin="1,0">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Refresh}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" />
+                                </Button>
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="4,2" />
+                                <Button Style="{StaticResource Zen.Style.Button.Icon}" ToolTip="Add New" Margin="1,0">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Plus}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.VibrantCyan}" Stretch="Uniform" />
+                                </Button>
+                                <Button Style="{StaticResource Zen.Style.Button.Icon}" ToolTip="Delete" Margin="1,0">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Trash}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.VibrantRose}" Stretch="Uniform" />
+                                </Button>
+                                <Button Style="{StaticResource Zen.Style.Button.Icon}" ToolTip="Settings" Margin="1,0">
+                                    <Path Data="{StaticResource Zen.Icon.Geometry.Settings}" Width="12" Height="12" Fill="{StaticResource Zen.Brush.Foreground.Primary}" Stretch="Uniform" />
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </controls:ZenCard>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
