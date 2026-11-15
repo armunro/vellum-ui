@@ -1,6 +1,6 @@
-# ZenUI — High-Density Dark Slate WPF UI Framework
+# Vellum UI — High-Density Dark Slate WPF UI Framework
 
-ZenUI is a modern, high-density WPF UI framework designed for technical applications, developer tools, telemetry dashboards, and data-intensive interfaces.
+Vellum UI (VellumUI) is a modern, high-density WPF UI framework designed for technical applications, developer tools, telemetry dashboards, and data-intensive interfaces.
 
 ---
 
@@ -15,15 +15,21 @@ ZenUI is a modern, high-density WPF UI framework designed for technical applicat
   - **Status Accents**: Success Emerald (`#10B981`), Warning Amber (`#F59E0B`), Danger Rose (`#F43F5E`), Info Cyan (`#06B6D4`).
 - **Bright & Vibrant Foregrounds**: Ultra-crisp `#F8FAFC` primary typography paired with high-contrast vibrant text helpers (`#38BDF8`, `#4ADE80`, `#C084FC`, `#FDE047`, `#FB7185`).
 - **Top Menus & Left Menus**: Dedicated controls for both horizontal header navigation (`ZenTopMenu`, `ZenTopMenuItem`) and collapsible vertical navigation drawers (`ZenLeftNav`, `ZenNavItem`, `ZenNavSection`).
-- **Demonstration Showcase Application**: Built-in interactive showcase app (`ZenUI.Demo`) demonstrating all controls, tables, inputs, navigation, containers, and theme resources.
+- **Demonstration Showcase Application**: Built-in interactive showcase app (`VellumUI.Demo`) demonstrating all controls, tables, inputs, navigation, containers, and theme resources.
 
 ---
 
 ## Quick Start Guide
 
-### 1. Reference ZenUI in your WPF Project
+### 1. Reference Vellum UI in your WPF Project
 
-Add a reference to `ZenUI.csproj` in your project or package dependencies.
+Add a reference to `VellumUI` via NuGet package:
+
+```powershell
+dotnet add package VellumUI
+```
+
+Or reference `VellumUI.csproj` directly in your project.
 
 ### 2. Include Theme Resources in `App.xaml`
 
@@ -35,7 +41,7 @@ Add a reference to `ZenUI.csproj` in your project or package dependencies.
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/ZenUI;component/Themes/ZenTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/VellumUI;component/Themes/ZenTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
@@ -48,7 +54,7 @@ Add a reference to `ZenUI.csproj` in your project or package dependencies.
 <controls:ZenWindow x:Class="MyProject.MainWindow"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:ZenUI.Controls;assembly=ZenUI"
+                    xmlns:controls="clr-namespace:VellumUI.Controls;assembly=VellumUI"
                     Title="My High Density App"
                     WindowIcon="{StaticResource Zen.Icon.Geometry.Layers}"
                     Width="1100" Height="700">
@@ -107,5 +113,5 @@ Add a reference to `ZenUI.csproj` in your project or package dependencies.
 ## Running the Demonstration App
 
 ```powershell
-dotnet run --project src/ZenUI.Demo/ZenUI.Demo.csproj
+dotnet run --project src/VellumUI.Demo/VellumUI.Demo.csproj
 ```

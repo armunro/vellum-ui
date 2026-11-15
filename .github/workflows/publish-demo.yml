@@ -6,15 +6,21 @@ on:
       - 'v*.*.*'
     branches:
       - main
+      - 'release/**'
     paths:
       - 'src/VellumUI/**'
       - 'src/VellumUI.Demo/**'
       - '.github/workflows/publish-demo.yml'
   pull_request:
+    branches:
+      - main
+      - 'release/**'
     paths:
       - 'src/VellumUI/**'
       - 'src/VellumUI.Demo/**'
       - '.github/workflows/publish-demo.yml'
+  release:
+    types: [published, created]
   workflow_dispatch:
     inputs:
       version:
@@ -59,8 +65,22 @@ jobs:
         run: |
           $version = "${{ github.event.inputs.version }}"
           if ([string]::IsNullOrWhiteSpace($version)) {
-            if ($env:GITHUB_REF -like "refs/tags/v*") {
+            $releaseTag = "${{ github.event.release.tag_name }}"
+            if (-not [string]::IsNullOrWhiteSpace($releaseTag)) {
+              if ($releaseTag.StartsWith("v")) {
+                $version = $releaseTag.Substring(1)
+              } else {
+                $version = $releaseTag
+              }
+            } elseif ($env:GITHUB_REF -like "refs/tags/v*") {
               $version = $env:GITHUB_REF.Substring(11)
+            } elseif ($env:GITHUB_REF -like "refs/tags/*") {
+              $version = $env:GITHUB_REF.Substring(10)
+            } elseif ($env:GITHUB_REF -like "refs/heads/release/*") {
+              $version = $env:GITHUB_REF.Substring(19)
+              if ($version.StartsWith("v")) {
+                $version = $version.Substring(1)
+              }
             }
           }
           if (-not [string]::IsNullOrWhiteSpace($version)) {
@@ -117,6 +137,7 @@ jobs:
 
       - name: Attach Assets to GitHub Release
         if: |
+          github.event_name == 'release' ||
           startsWith(github.ref, 'refs/tags/v') ||
           (github.event_name == 'workflow_dispatch' && github.event.inputs.create_release_draft == 'true')
         uses: softprops/action-gh-release@v2

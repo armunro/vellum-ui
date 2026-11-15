@@ -6,13 +6,19 @@ on:
       - 'v*.*.*'
     branches:
       - main
+      - 'release/**'
     paths:
       - 'src/VellumUI/**'
       - '.github/workflows/publish-nuget.yml'
   pull_request:
+    branches:
+      - main
+      - 'release/**'
     paths:
       - 'src/VellumUI/**'
       - '.github/workflows/publish-nuget.yml'
+  release:
+    types: [published, created]
   workflow_dispatch:
     inputs:
       version:
@@ -55,8 +61,22 @@ jobs:
         run: |
           $version = "${{ github.event.inputs.version }}"
           if ([string]::IsNullOrWhiteSpace($version)) {
-            if ($env:GITHUB_REF -like "refs/tags/v*") {
+            $releaseTag = "${{ github.event.release.tag_name }}"
+            if (-not [string]::IsNullOrWhiteSpace($releaseTag)) {
+              if ($releaseTag.StartsWith("v")) {
+                $version = $releaseTag.Substring(1)
+              } else {
+                $version = $releaseTag
+              }
+            } elseif ($env:GITHUB_REF -like "refs/tags/v*") {
               $version = $env:GITHUB_REF.Substring(11)
+            } elseif ($env:GITHUB_REF -like "refs/tags/*") {
+              $version = $env:GITHUB_REF.Substring(10)
+            } elseif ($env:GITHUB_REF -like "refs/heads/release/*") {
+              $version = $env:GITHUB_REF.Substring(19)
+              if ($version.StartsWith("v")) {
+                $version = $version.Substring(1)
+              }
             }
           }
           if (-not [string]::IsNullOrWhiteSpace($version)) {
@@ -90,6 +110,7 @@ jobs:
 
       - name: Push to NuGet.org
         if: |
+          github.event_name == 'release' ||
           (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
           (github.event_name == 'workflow_dispatch' && github.event.inputs.push_to_nuget == 'true')
         env:
@@ -104,6 +125,7 @@ jobs:
 
       - name: Push to GitHub Packages
         if: |
+          github.event_name == 'release' ||
           (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
           (github.event_name == 'workflow_dispatch' && github.event.inputs.push_to_github == 'true')
         env:
@@ -114,7 +136,9 @@ jobs:
           dotnet nuget push "./artifacts/nuget/*.nupkg" --source "github" --skip-duplicate
 
       - name: Attach NuGet Package to GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: |
+          github.event_name == 'release' ||
+          startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: ./artifacts/nuget/*

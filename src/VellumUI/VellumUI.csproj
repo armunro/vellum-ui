@@ -10,10 +10,10 @@
     <Version>1.0.0</Version>
     <Authors>ARmunro</Authors>
     <Description>High-density dark slate WPF UI framework and controls library.</Description>
-    <PackageTags>wpf;controls;ui;theme;xaml;high-density;vellumui;zenui</PackageTags>
+    <PackageTags>wpf;controls;ui;theme;xaml;high-density;vellumui;vellum-ui</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/ARmunro/ZenUI</RepositoryUrl>
+    <RepositoryUrl>https://github.com/ARmunro/vellum-ui</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
