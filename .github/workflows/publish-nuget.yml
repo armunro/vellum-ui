@@ -1,57 +1,41 @@
-﻿name: Publish VellumUI NuGet Package
+﻿name: Release Build and Publish NuGet Package
 
 on:
   push:
+    branches:
+      - 'release/**'
+      - 'release/*'
+      - 'release-*'
+      - 'releases/**'
+      - 'releases/*'
     tags:
       - 'v*.*.*'
       - 'v*'
-    branches:
-      - main
-      - 'release/**'
-      - 'release/*'
-      - 'release-*'
-      - 'releases/**'
-      - 'releases/*'
-    paths:
-      - 'src/VellumUI/**'
-      - '.github/workflows/publish-nuget.yml'
-  pull_request:
-    branches:
-      - main
-      - 'release/**'
-      - 'release/*'
-      - 'release-*'
-      - 'releases/**'
-      - 'releases/*'
-    paths:
-      - 'src/VellumUI/**'
-      - '.github/workflows/publish-nuget.yml'
-  release:
-    types: [published, created]
   workflow_dispatch:
     inputs:
       version:
-        description: 'Package Version (e.g., 1.0.1, leave empty to use auto-calculated version)'
+        description: 'Package/Release Version (e.g., 1.0.1, leave empty to auto-calculate)'
         required: false
         type: string
       push_to_nuget:
         description: 'Push package to NuGet.org'
-        required: true
+        required: false
         type: boolean
         default: true
       push_to_github:
         description: 'Push package to GitHub Packages'
-        required: true
+        required: false
         type: boolean
         default: false
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build-and-pack:
-    name: Build, Test & Pack VellumUI
+    name: Build, Test, and Release NuGet Package
     runs-on: windows-latest
-    permissions:
-      contents: write
-      packages: write
 
     steps:
       - name: Checkout repository
@@ -64,57 +48,40 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Extract Version
-        id: get_version
+      - name: Determine Version
+        id: version_step
         shell: pwsh
         run: |
           $inputVer = "${{ github.event.inputs.version }}"
           if (-not [string]::IsNullOrWhiteSpace($inputVer)) {
-            $version = $inputVer
+            $ver = $inputVer
           } else {
-            $releaseTag = "${{ github.event.release.tag_name }}"
-            if (-not [string]::IsNullOrWhiteSpace($releaseTag)) {
-              $version = $releaseTag
-            } elseif ($env:GITHUB_REF -like "refs/tags/*") {
-              $version = $env:GITHUB_REF -replace '^refs/tags/', ''
-            } else {
-              $branch = "${{ github.ref_name }}"
-              $version = $branch -replace '^releases?/', '' -replace '^releases?-', ''
+            $branch = "${{ github.ref_name }}"
+            $ver = $branch -replace '^releases?/', '' -replace '^releases?-', ''
+            if (-not $ver -or $ver -eq $branch) {
+              $ver = "v${{ github.run_number }}"
             }
           }
-
-          if ($version.StartsWith("v") -or $version.StartsWith("V")) {
-            $tagVer = $version
-            $rawVer = $version.Substring(1)
-          } else {
-            $tagVer = "v$version"
-            $rawVer = $version
+          if (-not ($ver.StartsWith("v") -or $ver.StartsWith("V"))) {
+            $ver = "v$ver"
           }
-
-          if (-not [string]::IsNullOrWhiteSpace($rawVer) -and $rawVer -ne $branch) {
-            Write-Host "Using explicit version: $rawVer (tag: $tagVer)"
-            echo "VERSION_FLAG=/p:Version=$rawVer /p:PackageVersion=$rawVer /p:AssemblyVersion=$rawVer /p:FileVersion=$rawVer" >> $env:GITHUB_ENV
-            echo "RELEASE_VERSION=$tagVer" >> $env:GITHUB_ENV
-            echo "VERSION=$rawVer" >> $env:GITHUB_OUTPUT
-          } else {
-            Write-Host "Using project default version"
-            echo "VERSION_FLAG=" >> $env:GITHUB_ENV
-            echo "RELEASE_VERSION=v${{ github.run_number }}" >> $env:GITHUB_ENV
-            echo "VERSION=" >> $env:GITHUB_OUTPUT
-          }
+          $rawVer = $ver.TrimStart('v', 'V')
+          Write-Host "Calculated version: $ver (raw: $rawVer)"
+          echo "RELEASE_VERSION=$ver" >> $env:GITHUB_ENV
+          echo "RAW_VERSION=$rawVer" >> $env:GITHUB_ENV
 
       - name: Restore dependencies
         run: dotnet restore VellumUI.sln
 
-      - name: Build solution
-        run: dotnet build VellumUI.sln -c Release --no-restore $env:VERSION_FLAG
+      - name: Build Solution
+        run: dotnet build VellumUI.sln -c Release --no-restore /p:Version=${{ env.RAW_VERSION }} /p:PackageVersion=${{ env.RAW_VERSION }} /p:AssemblyVersion=${{ env.RAW_VERSION }} /p:FileVersion=${{ env.RAW_VERSION }}
 
-      - name: Run unit tests
+      - name: Run Tests
         run: dotnet test tests/VellumUi.Tests/VellumUi.Tests.csproj -c Release --no-build --verbosity normal
 
       - name: Pack VellumUI NuGet package
         run: |
-          dotnet pack src/VellumUI/VellumUI.csproj -c Release --no-build $env:VERSION_FLAG -o ./artifacts/nuget
+          dotnet pack src/VellumUI/VellumUI.csproj -c Release --no-build /p:Version=${{ env.RAW_VERSION }} /p:PackageVersion=${{ env.RAW_VERSION }} /p:AssemblyVersion=${{ env.RAW_VERSION }} /p:FileVersion=${{ env.RAW_VERSION }} -o ./artifacts/nuget
 
       - name: Upload NuGet Package Artifacts
         uses: actions/upload-artifact@v4
@@ -123,10 +90,7 @@ jobs:
           path: ./artifacts/nuget/*
 
       - name: Push to NuGet.org
-        if: |
-          github.event_name == 'release' ||
-          (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
-          (github.event_name == 'workflow_dispatch' && github.event.inputs.push_to_nuget == 'true')
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.push_to_nuget != 'false'
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         shell: pwsh
@@ -138,10 +102,7 @@ jobs:
           }
 
       - name: Push to GitHub Packages
-        if: |
-          github.event_name == 'release' ||
-          (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
-          (github.event_name == 'workflow_dispatch' && github.event.inputs.push_to_github == 'true')
+        if: github.event.inputs.push_to_github == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
@@ -149,11 +110,7 @@ jobs:
           dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --name "github" --username "${{ github.repository_owner }}" --password "$env:GITHUB_TOKEN" --store-password-in-clear-text
           dotnet nuget push "./artifacts/nuget/*.nupkg" --source "github" --skip-duplicate
 
-      - name: Create or Attach to GitHub Release
-        if: |
-          github.event_name == 'release' ||
-          startsWith(github.ref, 'refs/tags/v') ||
-          startsWith(github.ref, 'refs/heads/release')
+      - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_VERSION }}
