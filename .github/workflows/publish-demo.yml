@@ -1,44 +1,30 @@
-﻿name: Publish VellumUI.Demo Self-Contained Executable
+﻿name: Release Build and Publish Demo
 
 on:
   push:
+    branches:
+      - 'release/**'
+      - 'release/*'
+      - 'release-*'
+      - 'releases/**'
+      - 'releases/*'
     tags:
       - 'v*.*.*'
-    branches:
-      - main
-      - 'release/**'
-    paths:
-      - 'src/VellumUI/**'
-      - 'src/VellumUI.Demo/**'
-      - '.github/workflows/publish-demo.yml'
-  pull_request:
-    branches:
-      - main
-      - 'release/**'
-    paths:
-      - 'src/VellumUI/**'
-      - 'src/VellumUI.Demo/**'
-      - '.github/workflows/publish-demo.yml'
-  release:
-    types: [published, created]
+      - 'v*'
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version (e.g., 1.0.0, leave empty for project default)'
+        description: 'Package/Release Version (e.g., 1.0.1, leave empty to auto-calculate)'
         required: false
         type: string
-      create_release_draft:
-        description: 'Create draft GitHub Release on manual dispatch'
-        required: false
-        type: boolean
-        default: false
+
+permissions:
+  contents: write
 
 jobs:
-  publish-demo:
-    name: Publish Demo (${{ matrix.target.rid }})
+  build-and-release:
+    name: Build, Test, and Release Demo (${{ matrix.target.rid }})
     runs-on: windows-latest
-    permissions:
-      contents: write
 
     strategy:
       matrix:
@@ -59,92 +45,66 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Extract Version
-        id: get_version
+      - name: Determine Version
+        id: version_step
         shell: pwsh
         run: |
-          $version = "${{ github.event.inputs.version }}"
-          if ([string]::IsNullOrWhiteSpace($version)) {
-            $releaseTag = "${{ github.event.release.tag_name }}"
-            if (-not [string]::IsNullOrWhiteSpace($releaseTag)) {
-              if ($releaseTag.StartsWith("v")) {
-                $version = $releaseTag.Substring(1)
-              } else {
-                $version = $releaseTag
-              }
-            } elseif ($env:GITHUB_REF -like "refs/tags/v*") {
-              $version = $env:GITHUB_REF.Substring(11)
-            } elseif ($env:GITHUB_REF -like "refs/tags/*") {
-              $version = $env:GITHUB_REF.Substring(10)
-            } elseif ($env:GITHUB_REF -like "refs/heads/release/*") {
-              $version = $env:GITHUB_REF.Substring(19)
-              if ($version.StartsWith("v")) {
-                $version = $version.Substring(1)
-              }
+          $inputVer = "${{ github.event.inputs.version }}"
+          if (-not [string]::IsNullOrWhiteSpace($inputVer)) {
+            $ver = $inputVer
+          } else {
+            $branch = "${{ github.ref_name }}"
+            $ver = $branch -replace '^releases?/', '' -replace '^releases?-', ''
+            if (-not $ver -or $ver -eq $branch) {
+              $ver = "v${{ github.run_number }}"
             }
           }
-          if (-not [string]::IsNullOrWhiteSpace($version)) {
-            Write-Host "Using explicit version: $version"
-            echo "VERSION_FLAG=/p:Version=$version /p:AssemblyVersion=$version /p:FileVersion=$version" >> $env:GITHUB_ENV
-            echo "VERSION=$version" >> $env:GITHUB_OUTPUT
-          } else {
-            Write-Host "Using project default version"
-            echo "VERSION_FLAG=" >> $env:GITHUB_ENV
-            echo "VERSION=" >> $env:GITHUB_OUTPUT
+          if (-not ($ver.StartsWith("v") -or $ver.StartsWith("V"))) {
+            $ver = "v$ver"
           }
+          $rawVer = $ver.TrimStart('v', 'V')
+          Write-Host "Calculated version: $ver (raw: $rawVer)"
+          echo "RELEASE_VERSION=$ver" >> $env:GITHUB_ENV
+          echo "RAW_VERSION=$rawVer" >> $env:GITHUB_ENV
 
       - name: Restore dependencies
         run: dotnet restore VellumUI.sln
 
-      - name: Run unit tests
-        run: dotnet test tests/VellumUi.Tests/VellumUi.Tests.csproj -c Release --verbosity normal
+      - name: Build Solution
+        run: dotnet build VellumUI.sln -c Release --no-restore /p:Version=${{ env.RAW_VERSION }} /p:AssemblyVersion=${{ env.RAW_VERSION }} /p:FileVersion=${{ env.RAW_VERSION }}
 
-      - name: Publish Self-Contained Single-File Executable
+      - name: Run Tests
+        run: dotnet test tests/VellumUi.Tests/VellumUi.Tests.csproj -c Release --no-build --verbosity normal
+
+      - name: Publish WPF Demo App (${{ matrix.target.rid }} self-contained)
+        run: |
+          dotnet publish src/VellumUI.Demo/VellumUI.Demo.csproj -c Release -r ${{ matrix.target.rid }} --self-contained true -p:Version=${{ env.RAW_VERSION }} -o ./publish/${{ matrix.target.rid }}
+
+      - name: Publish Single-File Executable (${{ matrix.target.rid }} self-contained)
+        run: |
+          dotnet publish src/VellumUI.Demo/VellumUI.Demo.csproj -c Release -r ${{ matrix.target.rid }} --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:Version=${{ env.RAW_VERSION }} -o ./publish/single-file-${{ matrix.target.rid }}
+
+      - name: Package Release Assets
         shell: pwsh
         run: |
-          $publishDir = "./artifacts/publish/${{ matrix.target.rid }}"
-          dotnet publish src/VellumUI.Demo/VellumUI.Demo.csproj `
-            -c Release `
-            -r ${{ matrix.target.rid }} `
-            --self-contained true `
-            -p:PublishSingleFile=true `
-            -p:IncludeNativeLibrariesForSelfExtract=true `
-            -p:EnableCompressionInSingleFile=true `
-            $env:VERSION_FLAG `
-            -o $publishDir
+          $zipName = "VellumUI.Demo-${{ env.RELEASE_VERSION }}-${{ matrix.target.rid }}.zip"
+          Compress-Archive -Path ./publish/${{ matrix.target.rid }}/* -DestinationPath "./$zipName"
+          Write-Host "Created $zipName"
 
-      - name: Package Executable into ZIP
-        shell: pwsh
-        run: |
-          $publishDir = "./artifacts/publish/${{ matrix.target.rid }}"
-          $zipName = "VellumUI.Demo-${{ matrix.target.rid }}.zip"
-          $zipPath = "./artifacts/zip/$zipName"
-          New-Item -ItemType Directory -Force -Path "./artifacts/zip"
-          Compress-Archive -Path "$publishDir\*" -DestinationPath $zipPath -Force
-          Write-Host "Created archive: $zipPath"
+          $singleExeName = "VellumUI.Demo-${{ env.RELEASE_VERSION }}-${{ matrix.target.rid }}.exe"
+          Copy-Item -Path ./publish/single-file-${{ matrix.target.rid }}/VellumUI.Demo.exe -Destination "./$singleExeName"
+          Write-Host "Created $singleExeName"
 
-      - name: Upload Single-File Executable Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: VellumUI.Demo-${{ matrix.target.rid }}-exe
-          path: ./artifacts/publish/${{ matrix.target.rid }}/VellumUI.Demo.exe
-
-      - name: Upload Zip Package Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: VellumUI.Demo-${{ matrix.target.rid }}-zip
-          path: ./artifacts/zip/*.zip
-
-      - name: Attach Assets to GitHub Release
-        if: |
-          github.event_name == 'release' ||
-          startsWith(github.ref, 'refs/tags/v') ||
-          (github.event_name == 'workflow_dispatch' && github.event.inputs.create_release_draft == 'true')
+      - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          name: Release ${{ env.RELEASE_VERSION }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
           files: |
-            ./artifacts/zip/*.zip
-            ./artifacts/publish/${{ matrix.target.rid }}/VellumUI.Demo.exe
-          draft: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.create_release_draft == 'true' }}
+            VellumUI.Demo-*-${{ matrix.target.rid }}.zip
+            VellumUI.Demo-*-${{ matrix.target.rid }}.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

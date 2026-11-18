@@ -4,9 +4,14 @@ on:
   push:
     tags:
       - 'v*.*.*'
+      - 'v*'
     branches:
       - main
       - 'release/**'
+      - 'release/*'
+      - 'release-*'
+      - 'releases/**'
+      - 'releases/*'
     paths:
       - 'src/VellumUI/**'
       - '.github/workflows/publish-nuget.yml'
@@ -14,6 +19,10 @@ on:
     branches:
       - main
       - 'release/**'
+      - 'release/*'
+      - 'release-*'
+      - 'releases/**'
+      - 'releases/*'
     paths:
       - 'src/VellumUI/**'
       - '.github/workflows/publish-nuget.yml'
@@ -22,7 +31,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Package Version (e.g., 1.0.1, leave empty to use csproj version or git tag)'
+        description: 'Package Version (e.g., 1.0.1, leave empty to use auto-calculated version)'
         required: false
         type: string
       push_to_nuget:
@@ -59,33 +68,38 @@ jobs:
         id: get_version
         shell: pwsh
         run: |
-          $version = "${{ github.event.inputs.version }}"
-          if ([string]::IsNullOrWhiteSpace($version)) {
+          $inputVer = "${{ github.event.inputs.version }}"
+          if (-not [string]::IsNullOrWhiteSpace($inputVer)) {
+            $version = $inputVer
+          } else {
             $releaseTag = "${{ github.event.release.tag_name }}"
             if (-not [string]::IsNullOrWhiteSpace($releaseTag)) {
-              if ($releaseTag.StartsWith("v")) {
-                $version = $releaseTag.Substring(1)
-              } else {
-                $version = $releaseTag
-              }
-            } elseif ($env:GITHUB_REF -like "refs/tags/v*") {
-              $version = $env:GITHUB_REF.Substring(11)
+              $version = $releaseTag
             } elseif ($env:GITHUB_REF -like "refs/tags/*") {
-              $version = $env:GITHUB_REF.Substring(10)
-            } elseif ($env:GITHUB_REF -like "refs/heads/release/*") {
-              $version = $env:GITHUB_REF.Substring(19)
-              if ($version.StartsWith("v")) {
-                $version = $version.Substring(1)
-              }
+              $version = $env:GITHUB_REF -replace '^refs/tags/', ''
+            } else {
+              $branch = "${{ github.ref_name }}"
+              $version = $branch -replace '^releases?/', '' -replace '^releases?-', ''
             }
           }
-          if (-not [string]::IsNullOrWhiteSpace($version)) {
-            Write-Host "Using explicit version: $version"
-            echo "VERSION_FLAG=/p:Version=$version /p:PackageVersion=$version" >> $env:GITHUB_ENV
-            echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+
+          if ($version.StartsWith("v") -or $version.StartsWith("V")) {
+            $tagVer = $version
+            $rawVer = $version.Substring(1)
+          } else {
+            $tagVer = "v$version"
+            $rawVer = $version
+          }
+
+          if (-not [string]::IsNullOrWhiteSpace($rawVer) -and $rawVer -ne $branch) {
+            Write-Host "Using explicit version: $rawVer (tag: $tagVer)"
+            echo "VERSION_FLAG=/p:Version=$rawVer /p:PackageVersion=$rawVer /p:AssemblyVersion=$rawVer /p:FileVersion=$rawVer" >> $env:GITHUB_ENV
+            echo "RELEASE_VERSION=$tagVer" >> $env:GITHUB_ENV
+            echo "VERSION=$rawVer" >> $env:GITHUB_OUTPUT
           } else {
             Write-Host "Using project default version"
             echo "VERSION_FLAG=" >> $env:GITHUB_ENV
+            echo "RELEASE_VERSION=v${{ github.run_number }}" >> $env:GITHUB_ENV
             echo "VERSION=" >> $env:GITHUB_OUTPUT
           }
 
@@ -135,12 +149,18 @@ jobs:
           dotnet nuget add source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --name "github" --username "${{ github.repository_owner }}" --password "$env:GITHUB_TOKEN" --store-password-in-clear-text
           dotnet nuget push "./artifacts/nuget/*.nupkg" --source "github" --skip-duplicate
 
-      - name: Attach NuGet Package to GitHub Release
+      - name: Create or Attach to GitHub Release
         if: |
           github.event_name == 'release' ||
-          startsWith(github.ref, 'refs/tags/v')
+          startsWith(github.ref, 'refs/tags/v') ||
+          startsWith(github.ref, 'refs/heads/release')
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          name: Release ${{ env.RELEASE_VERSION }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
           files: ./artifacts/nuget/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
