@@ -98,7 +98,9 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) {
             Write-Warning "NUGET_API_KEY secret is not set. Skipping push to NuGet.org."
           } else {
-            dotnet nuget push "./artifacts/nuget/*.nupkg" --api-key "$env:NUGET_API_KEY" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+            Get-ChildItem -Path ./artifacts/nuget -Filter *.nupkg | ForEach-Object {
+              dotnet nuget push $_.FullName --api-key "$env:NUGET_API_KEY" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+            }
           }
 
       - name: Push to GitHub Packages
@@ -107,7 +109,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
-          dotnet nuget push "./artifacts/nuget/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --skip-duplicate
+          Get-ChildItem -Path ./artifacts/nuget -Filter *.nupkg | ForEach-Object {
+            dotnet nuget push $_.FullName --api-key "$env:GITHUB_TOKEN" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --skip-duplicate --no-symbols
+          }
 
       - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
