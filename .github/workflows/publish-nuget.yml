@@ -59,13 +59,12 @@ jobs:
             $branch = "${{ github.ref_name }}"
             $ver = $branch -replace '^releases?/', '' -replace '^releases?-', ''
             if (-not $ver -or $ver -eq $branch) {
-              $ver = "v${{ github.run_number }}"
+              $ver = "${{ github.run_number }}"
             }
           }
-          if (-not ($ver.StartsWith("v") -or $ver.StartsWith("V"))) {
-            $ver = "v$ver"
-          }
-          $rawVer = $ver.TrimStart('v', 'V')
+          # Strip leading v, V, and any leading dot (e.g. v.1.3.0 -> 1.3.0, v1.3.0 -> 1.3.0)
+          $rawVer = $ver -replace '^[vV]\.?|^\.', ''
+          $ver = "v$rawVer"
           Write-Host "Calculated version: $ver (raw: $rawVer)"
           echo "RELEASE_VERSION=$ver" >> $env:GITHUB_ENV
           echo "RAW_VERSION=$rawVer" >> $env:GITHUB_ENV
