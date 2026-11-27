@@ -37,6 +37,7 @@ jobs:
   build-and-pack:
     name: Build, Test, and Release NuGet Package
     runs-on: windows-latest
+    environment: production
 
     steps:
       - name: Checkout repository
