@@ -31,6 +31,7 @@ on:
 permissions:
   contents: write
   packages: write
+  id-token: write
 
 jobs:
   build-and-pack:
@@ -88,18 +89,19 @@ jobs:
           name: VellumUI-nuget-packages
           path: ./artifacts/nuget/*
 
+      - name: NuGet login (Trusted Publishing / OIDC)
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.push_to_nuget != 'false'
+        id: nuget_login
+        uses: NuGet/login@v1
+        with:
+          user: armunro
+
       - name: Push to NuGet.org
         if: github.event_name != 'workflow_dispatch' || github.event.inputs.push_to_nuget != 'false'
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         shell: pwsh
         run: |
-          if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) {
-            Write-Warning "NUGET_API_KEY secret is not set. Skipping push to NuGet.org."
-          } else {
-            Get-ChildItem -Path ./artifacts/nuget -Filter *.nupkg | ForEach-Object {
-              dotnet nuget push $_.FullName --api-key "$env:NUGET_API_KEY" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-            }
+          Get-ChildItem -Path ./artifacts/nuget -Filter *.nupkg | ForEach-Object {
+            dotnet nuget push $_.FullName --api-key "${{ steps.nuget_login.outputs.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
           }
 
       - name: Push to GitHub Packages
